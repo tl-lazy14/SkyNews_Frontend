@@ -1,0 +1,197 @@
+header {
+    width: 100%;
+    background-color: white;
+    height: 60px;
+    padding: 0 200px;
+    box-sizing: border-box;
+    padding-top: 11px;
+    font-size: 15px;
+    color: #5c5b5b;
+}
+header .container {
+    width: 100%;
+    display: flex;
+    margin: auto;
+    align-items: center;
+}
+header .logo {
+    align-self: center;
+}
+header .logo img {
+    cursor: pointer;
+}
+header .date {
+    text-rendering: optimizeLegibility;
+    margin-left: 30px;
+}
+header .type-news-container {
+    display: flex;
+    margin-left: 50px;
+    justify-content: space-between;
+    width: 300px;
+}
+header .type-news {
+    cursor: pointer;
+}
+header .type-news .icon {
+    font-size: 16px;
+}
+header .type-news:hover {
+    color: #03925e;
+}
+header .search-container {
+    margin-left: 30px;
+    position: relative;
+}
+header .search-container input {
+    box-sizing: border-box;
+    font-size: 16px;
+    width: 230px;
+    height: 32px;
+    color: black;
+    border-radius: 15px;
+    padding: 0 15px 0 30px;
+    margin: 0;
+    border: 1px solid #bbbbbb;
+}
+header .search-container button {
+    border: none;
+    background-color: white;
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    padding: 0;
+    cursor: pointer;
+}
+header .search-container .icon {
+    color: #757575;
+    font-size: 16px;
+}
+header .login {
+    margin-left: 90px;
+    cursor: pointer;
+}
+header .login:hover {
+    color: #03925e;
+}
+header .login .logo {
+    font-size: 16px;
+}
+header .login span {
+    margin-left: 5px;
+}
+header .myaccount-container {
+    display: flex;
+    margin-left: 20px;
+}
+header .avatar {
+    margin-right: 10px;
+    background-color: green;
+    color: white;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+}
+header .dropdown {
+    display: inline-block;
+}
+header .dropdown-content {
+    position: absolute;
+    background-color: white;
+    min-width: 200px;
+    z-index: 1;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    top: 60px;
+    border-radius: 8px !important;
+    border: 1px solid #bbbbbb; 
+}
+header .dropdown-content .item {
+    padding: 15px 10px;
+    cursor: pointer;
+}
+header .dropdown-content .item:hover {
+    background-color: rgb(239, 237, 237);
+    color: #03925e;
+    border-radius: 8px;
+}
+header .dropdown-content .item .icon {
+    margin-left: 5px;
+    font-size: 16px;
+}
+header .handle-dropdown-account {
+    display: flex;
+    cursor: pointer;
+    align-self: center;
+    margin-top: 5px;
+}
+header .handle-dropdown-account:hover > .username, header .handle-dropdown-account:hover {
+    color: #03925e !important;
+}
+header .username {
+    margin-right: 5px;
+    font-weight: 600;
+    color: black;
+}
+header .icon-dropdown .icon {
+    font-size: 16px;
+}
+header .notification-container {
+    margin-left: 15px;
+}
+header .handle-dropdown-notification {
+    position: relative;
+    display: flex;
+}
+header .notification-container .icon {
+    font-size: 20px;
+    cursor: pointer;
+}
+header .notification-container .num-new-notification {
+    font-size: 12px;
+    position: absolute;
+    background-color: rgb(136, 4, 4);
+    color: white;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    top: -10px;
+    left: 16px;
+}
+header .dropdown-notification {
+    position: absolute;
+    background-color: white;
+    z-index: 1;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    top: 60px;
+    right: 70px;
+    border-radius: 8px !important;
+    border: 1px solid #bbbbbb; 
+    max-height: 500px;
+    overflow: auto;
+    max-width: 350px;
+}
+header .dropdown-notification .item {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    cursor: pointer;
+}
+header .dropdown-notification .item:hover {
+    background-color: rgb(239, 237, 237);
+}
+header .dropdown-notification .timestamp {
+    margin-top: 5px;
+    font-size: 13px;
+}
+header .dropdown-notification .new-notification {
+    color: rgb(70, 70, 243) !important;
+    background-color: rgb(239, 237, 237) !important;
+}

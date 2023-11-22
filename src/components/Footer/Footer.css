@@ -1,0 +1,28 @@
+.footer {
+    width: 100%;
+    background-color: white;
+    height: 50px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.footer .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 380px;
+    
+}
+.footer .logo {
+    margin-top: 4px;
+}
+.footer .media {
+    display: flex;
+    width: 90px;
+    justify-content: space-between;
+}
+.footer .icon {
+    font-size: 20px;
+    color: #5a5959;
+}
