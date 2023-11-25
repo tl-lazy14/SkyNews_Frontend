@@ -1,9 +1,14 @@
+import { useNavigate, useParams } from 'react-router-dom';
 import './CategoryNav.css';
 import { useState, useEffect } from 'react';
 
 const CategoryNav = () => {
 
     const [isNavbarFixed, setIsNavbarFixed] = useState(false);
+    const navigate = useNavigate();
+    const { category, topic } = useParams();
+    const categoryTest = "Thời sự";
+    const topicTest = "Chính trị";
 
     useEffect(() => {
         const handleScroll = () => {
@@ -30,9 +35,9 @@ const CategoryNav = () => {
         <div className={`category-nav ${isNavbarFixed ? 'navbar-fixed' : ''}`} id="categoryNavbar">
             <ul className='main-nav'>
                 <li className='category-item'>
-                    <div className='category-name'>Thời sự</div>
+                    <div className={`category-name ${category === categoryTest ? 'selected' : ''}`} onClick={() => navigate(`/category/${categoryTest}`)}>Thời sự</div>
                     <ul className='dropdown'>
-                        <li className='topic'>Chính trị</li>
+                        <li className='topic' onClick={() => navigate(`/category/${categoryTest}/${topicTest}`)}>Chính trị</li>
                         <li className='topic'>Dân sinh</li>
                         <li className='topic'>Lao động - Việc làm</li>
                         <li className='topic'>Giao thông</li>

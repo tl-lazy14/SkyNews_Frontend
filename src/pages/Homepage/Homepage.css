@@ -386,7 +386,6 @@
     width: 100%;
     box-sizing: border-box;
     margin-top: 20px;
-    grid-auto-columns: minmax(0, 1fr);
 }
 .homepage .middle-category-group-news .group-news-item {
     background-color: rgb(135, 217, 166);

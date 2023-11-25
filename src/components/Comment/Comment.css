@@ -1,0 +1,67 @@
+.comment-item {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%
+}
+.comment-item .avatar {
+    margin-right: 15px;
+    flex-shrink: 0;
+    color: white;
+    background-color: #04aa6d;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    font-size: 18px;
+}
+.comment-item .comment-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.comment-item .username-content {
+    font-size: 16px;
+    line-height: 1.4;
+}
+.comment-item .username {
+    font-weight: bold;
+}
+.comment-item .comment {
+    color: #4f4f4f;
+}
+.comment-item .like-reply-time {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    box-sizing: border-box;
+    font-size: 15px;
+    color: #757575;
+}
+.comment-item .like {
+    cursor: pointer;
+}
+.comment-item .liked {
+    color: #04aa6d;
+    font-weight: bold;
+}
+.comment-item .like-reply {
+    display: flex;
+    gap: 25px;
+}
+.comment-item .num-like {
+    display: flex;
+    gap: 5px;
+    cursor: pointer;
+}
+.comment-item .num-like-icon {
+    color: #04aa6d;
+}
+.comment-item .reply {
+    cursor: pointer;
+}
+.comment-item .reply:hover {
+    color: #04aa6d;
+}

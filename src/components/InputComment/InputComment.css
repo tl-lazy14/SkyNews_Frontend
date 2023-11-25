@@ -1,0 +1,38 @@
+.input-comment {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+.input-comment .input-field {
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 16px;
+    margin-top: 20px;
+    border-radius: 8px;
+    background-color: #f9f7f7;
+    border: 1px solid #bbbbbb;
+}
+.input-comment .error-text {
+    margin: 10px 0 0 0;
+    color: rgb(178, 3, 3);
+    font-weight: 600;
+}
+.input-comment .submit-btn {
+    background-color: #04aa6d;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    height: 40px;
+    width: 100px;
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    float: right;
+}
+.input-comment .submit-btn:hover {
+    background-color: #03925e;
+}

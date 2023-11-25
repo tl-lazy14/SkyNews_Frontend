@@ -1,0 +1,177 @@
+.detail-news-page .content {
+    padding: 20px 350px;
+}
+.detail-news-page .news-content {
+    width: 100%;
+    background-color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+.detail-news-page .news-content .header-content {
+    display: flex;
+    justify-content: space-between;
+}
+.detail-news-page .news-content .category-topic {
+    display: flex;
+    gap: 8px;
+    font-size: 15px;
+}
+.detail-news-page .news-content .category-name {
+    color: #04aa6d;
+    cursor: pointer;
+}
+.detail-news-page .news-content .icon-right {
+    font-size: 15px;
+    color: #757575;
+}
+.detail-news-page .news-content .topic-name {
+    color: #4f4f4f;
+    cursor: pointer;
+}
+.detail-news-page .news-content .time {
+    font-size: 15px;
+    color: #4f4f4f;
+}
+.detail-news-page .news-content .news-body {
+    margin-top: 10px;
+}
+.detail-news-page .news-content .news-body .title-news {
+    font-size: 37px;
+    font-weight: bold;
+    line-height: 1.2;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+.detail-news-page .news-content .news-body .description {
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.detail-news-page .news-content .news-body .description p {
+    line-height: 1.5;
+    margin: 15px 0;
+}
+.detail-news-page .news-content .news-body .description p:has(.ql-size-small) {
+    font-size: 15px !important;
+    margin: 0 0 !important;
+}
+.detail-news-page .news-content .news-body .description img {
+    width: 100%;
+}
+.detail-news-page .news-content .news-body .description video {
+    width: 100%;
+}
+.detail-news-page .news-content .news-body .author-name {
+    text-align: right;
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 30px;
+}
+.detail-news-page .news-content .action-button {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+.detail-news-page .news-content .action-button .btn {
+    color: white;
+    background-color: #04aa6d;
+    padding: 10px;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.detail-news-page .news-content .action-button .btn:hover {
+    background-color: #03925e;
+}
+.detail-news-page .news-content .action-button .btn-back {
+    align-self: center;
+}
+.detail-news-page .news-content .action-button .btn-save-news {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.detail-news-page .news-content .action-button .bookmark-icon {
+    font-size: 20px;
+}
+.detail-news-page .news-content .action-button .bookmark-icon-saved {
+    color: #fde956 !important;
+}
+/*
+.quill {
+    background-color: white;
+    margin-top: 50px;
+}
+.quill .ql-editor {
+    height: 400px;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.quill .ql-editor p {
+    line-height: 1.2;
+    margin-bottom: 15px;
+}
+.quill .ql-size-small {
+    font-size: 15px !important;
+}
+.quill .ql-size-large {
+    font-size: 30px !important;
+}
+.quill .ql-size-huge {
+    font-size: 40px !important;
+}
+.result-quill {
+    margin-top: 50px;
+    width: 100%;
+    color: white;
+}
+*/
+.detail-news-page .news-content .list-tag-container {
+    display: flex;
+    margin-top: 30px;
+}
+.detail-news-page .news-content .list-tag-container .title {
+    color: #04aa6d;
+    margin-right: 15px;
+}
+.detail-news-page .news-content .list-tag-container .list-tag {
+    display: flex;
+    gap: 10px;
+}
+.detail-news-page .comment-container {
+    box-sizing: border-box;
+    width: 100%;
+    background-color: white;
+    padding: 20px 25px;
+    margin-top: 20px;
+    border-radius: 8px;
+}
+.detail-news-page .comment-container .title {
+    font-size: 22px;
+}
+.detail-news-page .comment-container .title-name {
+    font-size: 22px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: bold;
+}
+.detail-news-page .comment-container .list-comment {
+    padding: 20px 0;
+    margin-top: 30px;
+    border-top: 1px solid #bbbbbb;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.detail-news-page .comment-container .comment-group {
+    box-sizing: border-box;
+    width: 100%;
+}
+.detail-news-page .comment-container .comment-child-group {
+    box-sizing: border-box;
+    margin-top: 20px;
+    margin-left: 50px;
+    border-left: 2px solid #bbbbbb;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}

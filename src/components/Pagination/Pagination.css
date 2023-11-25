@@ -1,0 +1,24 @@
+.pagination {
+    display: flex;
+    margin-top: 20px;
+    text-align: center;
+    gap: 10px;
+    justify-content: center;
+}
+.pagination .page-btn {
+    background: #04aa6d;
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 400;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.2s;
+}
+.pagination .page-btn:hover {
+    background: #177d59;
+}
+.pagination .selected-page {
+    background-color: #f8f16b !important;
+    color: black !important;
+}

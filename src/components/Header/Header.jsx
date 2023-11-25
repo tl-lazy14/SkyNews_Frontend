@@ -1,7 +1,7 @@
 import './Header.css';
 import Logo from "../../assets/Sky-News-Logo.png";
 import { useNavigate } from "react-router-dom";
-import { getFormattedDateTime } from '../../utils/formatDateTime';
+import { getFormattedDate } from '../../utils/formatDateTime';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faCaretDown, faClock, faEye, faFire, faMagnifyingGlass, faRightFromBracket, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useState } from 'react';
@@ -45,7 +45,7 @@ const Header = () => {
                     <img src={Logo} alt='logo' width={150} />
                 </div>
                 <div className='date'>
-                    {getFormattedDateTime()}
+                    {getFormattedDate()}
                 </div>
                 <div className='type-news-container'>
                     <div className='type-news'>

@@ -10,8 +10,12 @@ import News5 from '../../assets/news5.jpg';
 import News6 from '../../assets/news6.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faNewspaper } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 const Homepage = () => {
+
+    const navigate = useNavigate();
+
     return (
         <>
         <div className='homepage'>
@@ -24,7 +28,7 @@ const Homepage = () => {
                         <div>
                             <div className='title-news'>Lâm Đồng cân nhắc xây công trình lớn khu vực Dinh tỉnh trưởng ở Đà Lạt</div>
                             <div className='description'>Chính quyền Lâm Đồng cân nhắc đề xuất dự án quy mô lớn ở khu vực Dinh tỉnh trưởng 113 năm tuổi, thay vào đó nên xen công trình vừa phải khi lập quy hoạch.</div>
-                            <div className='category'>Thời sự</div>
+                            <div className='category' onClick={() => navigate(`/category/Thời sự`)}>Thời sự</div>
                         </div>
                     </div>
                     <div className='item news-2'>
