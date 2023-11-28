@@ -9,6 +9,7 @@ import { useState } from 'react';
 const Header = () => {
 
     const navigate = useNavigate();
+    const currentPath = window.location.pathname;
 
     const [searchKeyword, setSearchKeyword] = useState('');
     const [dropdownStates, setDropdownStates] = useState([
@@ -23,7 +24,7 @@ const Header = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (searchKeyword.trim() !== '') navigate(`/search/${searchKeyword}`);
+        if (searchKeyword.trim() !== '') navigate(`/search?q=${searchKeyword}`);
     }
 
     const toggleDropdown = (index) => {
@@ -48,13 +49,13 @@ const Header = () => {
                     {getFormattedDate()}
                 </div>
                 <div className='type-news-container'>
-                    <div className='type-news'>
+                    <div className={`type-news ${currentPath === '/newest' ? 'selected-type-news' : ''}`} onClick={() => navigate('/newest')}>
                         <FontAwesomeIcon className='icon' icon={faClock} /> Mới nhất
                     </div>
-                    <div className='type-news'>
+                    <div className={`type-news ${currentPath === '/most-view' ? 'selected-type-news' : ''}`} onClick={() => navigate('/most-view')}>
                         <FontAwesomeIcon className='icon' icon={faEye} /> Xem nhiều
                     </div>
-                    <div className='type-news'>
+                    <div className={`type-news ${currentPath === '/hot-news' ? 'selected-type-news' : ''}`} onClick={() => navigate('/hot-news')}>
                         <FontAwesomeIcon className='icon' icon={faFire} /> Tin nóng
                     </div>
                 </div>

@@ -1,9 +1,13 @@
 import './Pagination.css';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const Pagination = ({numPages, currentPage}) => {
+const PaginationURLHasParameter = ({numPages, currentPage}) => {
 
-    const currentPath = window.location.pathname;
+    const currentURL = window.location.pathname + window.location.search;
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const paramPage = searchParams.get('page');
+    const urlBeforePage = paramPage ? currentURL.slice(0, currentURL.indexOf('&page=')) : currentURL;
     const navigate = useNavigate();
 
     const generatePageNumbers = () => {
@@ -22,15 +26,15 @@ const Pagination = ({numPages, currentPage}) => {
     };
 
     const handlePagination = (page) => {
-        if (page === 1) navigate(`${currentPath}`);
-        else navigate(`${currentPath}?page=${page}`);
+        if (page === 1) navigate(`${urlBeforePage}`);
+        else navigate(`${urlBeforePage}&page=${page}`);
     }
 
     return (
         <>
         <div className='pagination'>
             {numPages > 3 && (
-            <div className='page-btn' onClick={() => navigate(`${currentPath}`)}>
+            <div className='page-btn' onClick={() => handlePagination(1)}>
                 Trang đầu
             </div>
             )}
@@ -40,13 +44,13 @@ const Pagination = ({numPages, currentPage}) => {
                 </div>
             ))}
             {numPages > 3 && (
-            <div className='page-btn' onClick={() => navigate(`${currentPath}?page=${numPages}`)}>
+            <div className='page-btn' onClick={() => handlePagination(numPages)}>
                 Trang cuối
             </div>
             )}
-        </div>        
+        </div>      
         </>
     );
 }
 
-export default Pagination
+export default PaginationURLHasParameter;

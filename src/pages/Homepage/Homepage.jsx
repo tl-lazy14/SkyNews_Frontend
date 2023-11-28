@@ -11,10 +11,15 @@ import News6 from '../../assets/news6.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faNewspaper } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const Homepage = () => {
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
         <>
@@ -24,10 +29,10 @@ const Homepage = () => {
             <div className='content'>
                 <div className='first-news-group'>
                     <div className='item news-1'>
-                        <div><img className='thumb-art' src={News1} alt='news' /></div>
+                        <div><img onClick={() => navigate('/news/1')} className='thumb-art' src={News1} alt='news' /></div>
                         <div>
-                            <div className='title-news'>Lâm Đồng cân nhắc xây công trình lớn khu vực Dinh tỉnh trưởng ở Đà Lạt</div>
-                            <div className='description'>Chính quyền Lâm Đồng cân nhắc đề xuất dự án quy mô lớn ở khu vực Dinh tỉnh trưởng 113 năm tuổi, thay vào đó nên xen công trình vừa phải khi lập quy hoạch.</div>
+                            <div onClick={() => navigate('/news/1')} className='title-news'>Lâm Đồng cân nhắc xây công trình lớn khu vực Dinh tỉnh trưởng ở Đà Lạt</div>
+                            <div onClick={() => navigate('/news/1')} className='description'>Chính quyền Lâm Đồng cân nhắc đề xuất dự án quy mô lớn ở khu vực Dinh tỉnh trưởng 113 năm tuổi, thay vào đó nên xen công trình vừa phải khi lập quy hoạch.</div>
                             <div className='category' onClick={() => navigate(`/category/Thời sự`)}>Thời sự</div>
                         </div>
                     </div>
@@ -95,7 +100,7 @@ const Homepage = () => {
                             <div className='title-news'>Quang Liêm đạt thành tích tốt nhất ở Grand Chess Tour</div>
                             <div className='image-content'>
                                 <div><img className='thumb-art' src={News6} alt='news' /></div>
-                                <div className='description'><span className='city'>MỸ- </span>Lê Quang Liêm kết thúc siêu giải cờ nhanh chớp St Louis ở vị trí đồng giải ba, với số điểm cao nhất anh từng đạt được là 20.</div>
+                                <div className='description'><span className='city'>MỸ - </span>Lê Quang Liêm kết thúc siêu giải cờ nhanh chớp St Louis ở vị trí đồng giải ba, với số điểm cao nhất anh từng đạt được là 20.</div>
                             </div>
                         </div>
                         <div className='news'>

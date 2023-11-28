@@ -160,9 +160,6 @@
     -webkit-box-orient: vertical;
     font-size: 15px;
 }
-.homepage .city {
-    color: #757575 !important;
-}
 .homepage .center-news-group .right-container .news-by-category {
     background-color: rgb(135, 217, 166);
     padding: 12px;
@@ -432,7 +429,7 @@
 .homepage .middle-category-group-news .group-news-item .description {
     color: #4f4f4f;
     cursor: pointer;
-    line-height: 1.2;
+    line-height: 1.3;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;

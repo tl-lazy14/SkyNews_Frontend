@@ -11,7 +11,7 @@ import News4 from '../../assets/news4.jpg';
 import News5 from '../../assets/news5.jpg';
 import News6 from '../../assets/news6.jpg';
 import News7 from '../../assets/news7.jpg';
-import Pagination from '../../components/Pagination/Pagination';
+import PaginationURLNoParameter from '../../components/Pagination/PaginationURLNoParameter';
 
 const CategoryPage = () => {
     
@@ -215,7 +215,7 @@ const CategoryPage = () => {
                         </div>
                     </div>
                 </div>
-                <Pagination numPages={numPages} currentPage={currentPage} />
+                <PaginationURLNoParameter numPages={numPages} currentPage={currentPage} />
             </div>
             <Footer />
         </div>

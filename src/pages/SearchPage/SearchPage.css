@@ -1,0 +1,108 @@
+.search-page .content {
+    padding: 20px 350px;
+}
+.search-page .content .search-container {
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 10px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid white;
+}
+.search-page .content .search-container .title-search {
+    color: white;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 29px;
+}
+.search-page .content .search-container .search-field {
+    width: 100%;
+    margin-top: 20px;
+    position: relative;
+}
+.search-page .content .search-container .input-field {
+    width: 100%;
+    height: 45px;
+    font-size: 16px;
+    padding: 0 55px 0 20px;
+    border-radius: 8px;
+    border: none;
+    box-sizing: border-box;
+}
+.search-page .content .search-container .input-field:focus {
+    outline: 2px solid #04aa6d;
+}
+.search-page .content .search-container .search-field button {
+    position: absolute;
+    right: 15px;
+    top: 13px;
+    background: none;
+    border: none;
+}
+.search-page .content .search-container .search-field .icon {
+    font-size: 15px;
+    color: #757575;
+    cursor: pointer;
+}
+.search-page .content .category-filter {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+.search-page .category-filter .filter-name {
+    color: white;
+    font-size: 17px;
+    align-self: center;
+}
+.search-page .category-filter .select-field select {
+    width: 180px; 
+    height: 40px;
+    font-size: 15px;
+    border-radius: 8px;
+    padding:  0 15px;
+}
+.search-page .category-filter .select-field select:focus {
+    outline: none;
+}
+.search-page .news-container {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.search-page .news-item {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    gap: 20px;
+}
+.search-page .news-item .title-description {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.search-page .news-item .title-news {
+    font-size: 23px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    line-height: 1.2;
+    cursor: pointer;
+    padding: 0;
+    transition: 0.2s;
+}
+.search-page .news-item .title-news:hover {
+    color: #03925e;
+}
+.search-page .news-item .description {
+    color: #4f4f4f;
+    cursor: pointer;
+    line-height: 1.3;
+    font-size: 16px;
+}
+.search-page .news-item .thumb-art {
+    width: 350px;
+    height: 220px;
+    cursor: pointer;
+}

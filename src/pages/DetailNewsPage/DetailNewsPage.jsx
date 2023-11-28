@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faBookmark } from '@fortawesome/free-solid-svg-icons';
 import { getFormattedDateTime } from '../../utils/formatDateTime';
 import News8 from '../../assets/news8.png';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
 import InputComment from '../../components/InputComment/InputComment';
 import Comment from '../../components/Comment/Comment';
@@ -24,6 +24,10 @@ const DetailNewsPage = () => {
     const handleReplyClick = (commentId) => {
         setSelectCommentReply(commentId);
     };
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     /* const [contentQuill, setContentQuill] = useState(''); */
     /*
     const handleEditorChange = (value) => {

@@ -93,7 +93,7 @@
 .category-page .first-news-group .big-item .description {
     color: white;
     cursor: pointer;
-    line-height: 1.2;
+    line-height: 1.3;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -206,5 +206,5 @@
 .category-page .list-news .description {
     color: #4f4f4f;
     cursor: pointer;
-    line-height: 1.2;
+    line-height: 1.3;
 }

@@ -9,6 +9,11 @@ const Comment = ({id, onReplyClick, selectedCommentReply}) => {
 
     const [liked, setLiked] = useState(false);
 
+    const handleClickReply = () => {
+        if (selectedCommentReply === id) onReplyClick();
+        else onReplyClick(id);
+    }
+
     return (
         <>
         <div className='comment-item'>
@@ -24,7 +29,7 @@ const Comment = ({id, onReplyClick, selectedCommentReply}) => {
                             <div><FontAwesomeIcon className='num-like-icon' icon={faThumbsUp} /></div>
                             <div>5</div>
                         </div>
-                        <div className='reply' onClick={() => onReplyClick(id)}>Trả lời</div>
+                        <div className='reply' onClick={handleClickReply}>Trả lời</div>
                     </div>
                     <div className='comment-timestamp'>{getFormattedTimestampComment(new Date())}</div>
                 </div>

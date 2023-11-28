@@ -36,7 +36,7 @@ header .type-news {
 header .type-news .icon {
     font-size: 16px;
 }
-header .type-news:hover {
+header .type-news:hover, header .selected-type-news {
     color: #03925e;
 }
 header .search-container {
@@ -65,7 +65,7 @@ header .search-container button {
 }
 header .search-container .icon {
     color: #757575;
-    font-size: 16px;
+    font-size: 15px;
 }
 header .login {
     margin-left: 90px;
