@@ -5,6 +5,8 @@ import { getFormattedDate } from '../../utils/formatDateTime';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faCaretDown, faClock, faEye, faFire, faMagnifyingGlass, faRightFromBracket, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useState } from 'react';
+import LoginForm from '../LoginForm/LoginForm';
+import RegisterForm from '../RegisterForm/RegisterForm';
 
 const Header = () => {
 
@@ -16,6 +18,9 @@ const Header = () => {
         false, // Chức năng người dùng
         false, // Thông báo
     ]);
+
+    const [isLoginFormOpen, setIsLoginFormOpen] = useState(false);
+    const [isRegisterFormOpen, setIsRegisterFormOpen] = useState(false);
 
     const handleSearchInputChange = (event) => {
         const value = event.target.value;
@@ -38,8 +43,18 @@ const Header = () => {
         setDropdownStates(newDropdownStates);
     };
 
+    const openLoginForm = () => {
+        setIsLoginFormOpen(true);
+    }
+
+    const openRegisterForm = () => {
+        setIsRegisterFormOpen(true);
+    }
+
     return (
         <>
+        <RegisterForm isModalOpen={isRegisterFormOpen} setIsModalOpen={setIsRegisterFormOpen} openLoginForm={openLoginForm} />
+        <LoginForm isModalOpen={isLoginFormOpen} setIsModalOpen={setIsLoginFormOpen} openRegisterForm={openRegisterForm} />
         <header>
             <div className='container'>
                 <div onClick={() => navigate("/")} className='logo'>
@@ -72,7 +87,7 @@ const Header = () => {
                     </form>
                 </div>
                 {/* If not logged in */}
-                <div className='login'>
+                <div className='login' onClick={() => setIsLoginFormOpen(true)}>
                         <FontAwesomeIcon className='icon' icon={faUser} /> <span>Đăng nhập</span>
                 </div>
                 {/* If logged in */}
