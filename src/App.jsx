@@ -7,6 +7,8 @@ import SearchPage from "./pages/SearchPage/SearchPage";
 import NewestPage from "./pages/NewestPage/NewestPage";
 import MostViewedPage from "./pages/MostViewedPage/MostViewedPage";
 import HotNewsPage from "./pages/HotNewsPage/HotNewsPage";
+import SavedNewsPage from "./pages/SavedNewsPage/SavedNewsPage";
+import ViewedNewsPage from "./pages/ViewedNewsPage/ViewedNewsPage";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
               <Route path="/newest" element={<NewestPage />} />
               <Route path="/most-view" element={<MostViewedPage />} />
               <Route path="/hot-news" element={<HotNewsPage />} />
+              <Route path="/user/saved-news" element={<SavedNewsPage />} />
+              <Route path="/user/viewed-news" element={<ViewedNewsPage />} />
             </Routes>
           </Router>
         </div>

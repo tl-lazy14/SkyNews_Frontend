@@ -1,0 +1,86 @@
+.viewed-news-page .content {
+    padding: 20px 350px;
+}
+.viewed-news-page .title-page {
+    color: black;
+    background-color: #fde956;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 25px;
+    font-weight: bold;
+    padding: 10px 40px;
+    border-radius: 30px 0 30px 0;
+    width: fit-content;
+    margin-top: 10px;
+}
+.viewed-news-page .news-container {
+    margin-top: 30px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.viewed-news-page .news-item {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+.viewed-news-page .news-item .title-description {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.viewed-news-page .news-item .title-news {
+    font-size: 23px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    line-height: 1.2;
+    cursor: pointer;
+    padding: 0;
+    transition: 0.2s;
+}
+.viewed-news-page .news-item .title-news:hover,
+.viewed-news-page .news-item .category:hover {
+    color: #03925e;
+}
+.viewed-news-page .news-item .description {
+    color: #4f4f4f;
+    cursor: pointer;
+    line-height: 1.3;
+    font-size: 16px;
+}
+.viewed-news-page .news-item .thumb-art {
+    width: 350px;
+    height: 220px;
+    cursor: pointer;
+}
+.viewed-news-page .news-item .category-date-saveIcon {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.viewed-news-page .news-item .category-date {
+    color: #9f9f9f;
+    font-size: 15px;
+}
+.viewed-news-page .news-item .category {
+    cursor: pointer;
+}
+.viewed-news-page .news-item .category:hover {
+    color: #04aa6d;
+}
+.viewed-news-page .news-item .not-save-icon {
+    color: #9f9f9f;
+    font-size: 20px;
+    cursor: pointer;
+}
+.viewed-news-page .news-item .saved-icon {
+    color: #04aa6d;
+    font-size: 20px;
+    cursor: pointer;
+}

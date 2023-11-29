@@ -7,6 +7,7 @@ export const getFormattedDate = () => {
     const year = currentDateTime.getFullYear();
     return `${dayOfWeek}, ${day}/${month}/${year}`;
 }
+
 export const getFormattedDateTime = (date) => {
     const daysOfWeek = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
     const dayOfWeek = daysOfWeek[date.getDay()];
@@ -17,6 +18,13 @@ export const getFormattedDateTime = (date) => {
     var minute = date.getMinutes();
     if (minute < 10) minute = '0' + minute;
     return `${dayOfWeek}, ${day}/${month}/${year}, ${hour}:${minute} (GMT+7)`;
+}
+
+export const getFormattedDateMonthYear = (date) => {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
 }
 
 export const getFormattedTimestampComment = (date) => {

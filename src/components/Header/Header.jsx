@@ -87,11 +87,12 @@ const Header = () => {
                     </form>
                 </div>
                 {/* If not logged in */}
+                {/*
                 <div className='login' onClick={() => setIsLoginFormOpen(true)}>
                         <FontAwesomeIcon className='icon' icon={faUser} /> <span>Đăng nhập</span>
                 </div>
+                */}
                 {/* If logged in */}
-                {/*
                 <div className='myaccount-container'>
                     <div className='avatar'>M</div>
                     <div className='dropdown'>
@@ -101,8 +102,8 @@ const Header = () => {
                         </div>
                         {dropdownStates[0] && (
                         <div className='dropdown-content'>
-                            <div className='item'>Tin đã lưu</div>
-                            <div className='item'>Tin đã xem</div>
+                            <div className='item' onClick={() => navigate('/user/saved-news')}>Tin đã lưu</div>
+                            <div className='item' onClick={() => navigate('/user/viewed-news')}>Tin đã xem</div>
                             <div className='item'>Đăng xuất <FontAwesomeIcon className="icon" icon={faRightFromBracket} /></div>
                         </div>
                         )}
@@ -136,7 +137,6 @@ const Header = () => {
                         </div>
                         )}
                 </div>
-                */}
             </div>
         </header>
         </>
