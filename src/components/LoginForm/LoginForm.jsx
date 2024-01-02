@@ -42,15 +42,16 @@ const LoginForm = ({ isModalOpen, setIsModalOpen, openRegisterForm }) => {
         event.preventDefault();
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const specialCharRegex = /[`~' ()":{}|[\]]/;
+        // eslint-disable-next-line no-useless-escape
+        const specialCharRegex = /[`\~!@#\$%\^&\*\+\-',.<>\?\/;():"{}\|\\[\]\s]/;
 
         if (loginInfo.email.trim() === '') setError((prev) => ({...prev, errorEmail: 'Bạn chưa nhập email'}));
         else if (!emailRegex.test(loginInfo.email)) setError((prev) => ({...prev, errorEmail: 'Email không hợp lệ'}));
         else setError((prev) => ({...prev, errorEmail: ''}));
 
         if (loginInfo.password.trim() === '') setError((prev) => ({...prev, errorPassword: 'Bạn chưa nhập mật khẩu'}));
-        else if (loginInfo.password.length < 6 || loginInfo.password.length > 14) setError((prev) => ({...prev, errorPassword: 'Mật khẩu ít nhất 6 ký tự và nhỏ hơn 15 ký tự'}));
-        else if (specialCharRegex.test(loginInfo.password)) setError((prev) => ({...prev, errorPassword: 'Mật khẩu không được chứa dấu tiếng Việt hoặc dấu cách'}));
+        else if (loginInfo.password.length < 6 || loginInfo.password.length > 14) setError((prev) => ({...prev, errorPassword: 'Mật khẩu phải có ít nhất 6 ký tự và nhỏ hơn 15 ký tự'}));
+        else if (specialCharRegex.test(loginInfo.password)) setError((prev) => ({...prev, errorPassword: 'Mật khẩu chỉ được chứa ký tự chữ và số'}));
         else setError((prev) => ({...prev, errorPassword: ''}));
     }
 
@@ -95,7 +96,7 @@ const LoginForm = ({ isModalOpen, setIsModalOpen, openRegisterForm }) => {
                                 value={loginInfo.password}
                                 onChange={handleInputChange}  
                             />
-                            <FontAwesomeIcon className='icon' onClick={() => setShowPassword(!showPassword)} icon={showPassword ? faEyeSlash : faEye} />
+                            <FontAwesomeIcon className='icon' onClick={() => setShowPassword(!showPassword)} icon={showPassword ? faEye : faEyeSlash} />
                             <div className='error'>{error.errorPassword}</div>
                         </div>
                     </div>

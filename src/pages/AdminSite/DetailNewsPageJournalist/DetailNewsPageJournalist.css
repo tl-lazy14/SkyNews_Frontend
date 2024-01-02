@@ -1,0 +1,133 @@
+.detail-news-page-journalist {
+    background-color: #e2eaf8;
+    margin-left: 300px;
+    min-height: 713px;
+    padding: 10px 30px 30px;
+    box-sizing: border-box;
+}
+.detail-news-page-journalist .top-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.detail-news-page-journalist .name-page {
+    font-size: 30px;
+}
+.detail-news-page-journalist .back-btn {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #312fb5;
+    color: white;
+    border: none;
+    box-sizing: border-box;
+    height: 45px;
+    cursor: pointer;
+}
+.detail-news-page-journalist .back-btn:hover,
+.detail-news-page-journalist .btn-container .btn:hover {
+    background-color: #181775;
+}
+.detail-news-page-journalist .news-content {
+    background-color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    width: 100%;
+}
+.detail-news-page-journalist .news-content .header-content {
+    display: flex;
+    justify-content: space-between;
+}
+.detail-news-page-journalist .news-content .category-topic {
+    display: flex;
+    gap: 8px;
+    font-size: 15px;
+}
+.detail-news-page-journalist .news-content .category-name {
+    color: #312fb5;
+    cursor: pointer;
+}
+.detail-news-page-journalist .news-content .icon-right {
+    font-size: 15px;
+    color: #757575;
+}
+.detail-news-page-journalist .news-content .topic-name {
+    color: #4f4f4f;
+    cursor: pointer;
+}
+.detail-news-page-journalist .news-content .time {
+    font-size: 15px;
+    color: #4f4f4f;
+}
+.detail-news-page-journalist .news-content .news-body {
+    margin-top: 10px;
+}
+.detail-news-page-journalist .news-content .news-body .title-news {
+    font-size: 37px;
+    font-weight: bold;
+    line-height: 1.2;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+.detail-news-page-journalist .news-content .news-body .description {
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.detail-news-page-journalist .news-content .news-body .description p {
+    line-height: 1.5;
+    margin: 15px 0;
+}
+.detail-news-page-journalist .news-content .news-body .description p:has(.ql-size-small) {
+    font-size: 15px !important;
+    margin: 0 0 !important;
+}
+.detail-news-page-journalist .news-content .news-body .description img {
+    width: 700px;
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+.detail-news-page-journalist .news-content .news-body .description video {
+    width: 700px;
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+.detail-news-page-journalist .news-content .list-tag-container {
+    display: flex;
+    margin-top: 30px;
+}
+.detail-news-page-journalist .news-content .list-tag-container .title {
+    color: #312fb5;
+    margin-right: 15px;
+}
+.detail-news-page-journalist .news-content .list-tag-container .list-tag {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.detail-news-page-journalist .btn-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 0;
+}
+.detail-news-page-journalist .btn-container .btn {
+    width: 150px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 17px;
+    background-color: #312fb5;
+    color: white;
+    border: none;
+    box-sizing: border-box;
+    height: 45px;
+    cursor: pointer;
+    text-align: center;
+}

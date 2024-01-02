@@ -10,12 +10,14 @@ import 'react-toastify/dist/ReactToastify.css';
 const RegisterForm = ({ isModalOpen, setIsModalOpen, openLoginForm }) => {
 
     const [registerInfo, setRegisterInfo] = useState({
+        username: '',
         email: '',
         password: '',
         rePassword: '',
         verificationCode: '',
     });
     const [error, setError] = useState({
+        errorUsername: '',
         errorEmail: '',
         errorPassword: '',
         errorRePassword: '',
@@ -38,12 +40,14 @@ const RegisterForm = ({ isModalOpen, setIsModalOpen, openLoginForm }) => {
     const closeModal = () => {
         setIsModalOpen(false);
         setRegisterInfo({
+            username: '',
             email: '',
             password: '',
             rePassword: '',
             verificationCode: '',
         });
         setError({
+            errorUsername: '',
             errorEmail: '',
             errorPassword: '',
             errorRePassword: '',
@@ -59,8 +63,12 @@ const RegisterForm = ({ isModalOpen, setIsModalOpen, openLoginForm }) => {
         event.preventDefault();
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const specialCharRegex = /[`~' ()":{}|[\]]/;
+        // eslint-disable-next-line no-useless-escape
+        const specialCharRegex = /[`\~!@#\$%\^&\*\+\-',.<>\?\/;():"{}\|\\[\]]/;
         const alphanumericRegex = /^[a-zA-Z0-9]+$/;
+
+        if (registerInfo.username.trim() === '') setError((prev) => ({...prev, errorUsername: 'Bạn chưa nhập tên tài khoản'}));
+        else setError((prev) => ({...prev, errorUsername: ''}));
 
         if (registerInfo.email.trim() === '') setError((prev) => ({...prev, errorEmail: 'Bạn chưa nhập email'}));
         else if (!emailRegex.test(registerInfo.email)) setError((prev) => ({...prev, errorEmail: 'Email không hợp lệ'}));
@@ -68,7 +76,7 @@ const RegisterForm = ({ isModalOpen, setIsModalOpen, openLoginForm }) => {
 
         if (registerInfo.password.trim() === '') setError((prev) => ({...prev, errorPassword: 'Bạn chưa nhập mật khẩu'}));
         else if (registerInfo.password.length < 6 || registerInfo.password.length > 14) setError((prev) => ({...prev, errorPassword: 'Mật khẩu ít nhất 6 ký tự và nhỏ hơn 15 ký tự'}));
-        else if (specialCharRegex.test(registerInfo.password)) setError((prev) => ({...prev, errorPassword: 'Mật khẩu không được chứa dấu tiếng Việt hoặc dấu cách'}));
+        else if (specialCharRegex.test(registerInfo.password)) setError((prev) => ({...prev, errorPassword: 'Mật khẩu chỉ được chứa ký tự chữ và số'}));
         else setError((prev) => ({...prev, errorPassword: ''}));
 
         if (registerInfo.rePassword.trim() === '') setError((prev) => ({...prev, errorRePassword: 'Bạn chưa nhập lại mật khẩu'}));
@@ -121,11 +129,23 @@ const RegisterForm = ({ isModalOpen, setIsModalOpen, openLoginForm }) => {
             shouldCloseOnEsc={true}
             overlayClassName="overlay"
         >
-            <div className='logo'><img src={Logo} alt='logo' width={160} /></div>
+            <div className='logo'><img src={Logo} alt='logo' width={140} /></div>
             <div className='title'>Tạo tài khoản</div>
             <div className='register-container'>
                 <form onSubmit={handleSubmit}>
                     <div className='field-container'>
+                        <div>
+                            <input
+                                type='text'
+                                className='input-field'
+                                name='username'
+                                placeholder='Tên tài khoản'
+                                value={registerInfo.username}
+                                onChange={handleInputChange}  
+                                autoComplete='off'
+                            />
+                            <div className='error'>{error.errorUsername}</div>
+                        </div>
                         <div>
                             <input
                                 type='text'
@@ -147,7 +167,7 @@ const RegisterForm = ({ isModalOpen, setIsModalOpen, openLoginForm }) => {
                                 value={registerInfo.password}
                                 onChange={handleInputChange}  
                             />
-                            <FontAwesomeIcon className='icon' onClick={() => setShowPassword((prev) => ({...prev, showPassword: !showPassword.showPassword}))} icon={showPassword.showPassword ? faEyeSlash : faEye} />
+                            <FontAwesomeIcon className='icon' onClick={() => setShowPassword((prev) => ({...prev, showPassword: !showPassword.showPassword}))} icon={showPassword.showPassword ? faEye : faEyeSlash} />
                             <div className='error'>{error.errorPassword}</div>
                         </div>
                         <div className='password-field'>
@@ -159,7 +179,7 @@ const RegisterForm = ({ isModalOpen, setIsModalOpen, openLoginForm }) => {
                                 value={registerInfo.rePassword}
                                 onChange={handleInputChange}  
                             />
-                            <FontAwesomeIcon className='icon' onClick={() => setShowPassword((prev) => ({...prev, showRePassword: !showPassword.showRePassword}))} icon={showPassword.showRePassword ? faEyeSlash : faEye} />
+                            <FontAwesomeIcon className='icon' onClick={() => setShowPassword((prev) => ({...prev, showRePassword: !showPassword.showRePassword}))} icon={showPassword.showRePassword ? faEye : faEyeSlash} />
                             <div className='error'>{error.errorRePassword}</div>
                         </div>
                         <div className='verification-container'>
@@ -183,7 +203,6 @@ const RegisterForm = ({ isModalOpen, setIsModalOpen, openLoginForm }) => {
                     <div style={{ display: 'flex', justifyContent: 'center' }}><button type='submit' className='submit-btn'>Tạo tài khoản</button></div>
                 </form>
             </div>
-            <div className='note-service'>Bạn tạo tài khoản là đồng ý với <span style={{ color: '#04aa6d', textDecoration: 'underline' }}>điều khoản sử dụng</span> và <span style={{ color: '#04aa6d', textDecoration: 'underline' }}>chính sách bảo mật</span> của SkyNews</div>
             <div className='login-btn' onClick={handleOpenLoginForm}>Quay về đăng nhập</div>            
         </Modal>
         </>

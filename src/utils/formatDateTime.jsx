@@ -30,8 +30,9 @@ export const getFormattedDateMonthYear = (date) => {
 export const getFormattedTimestampComment = (date) => {
     const day = date.getDate();
     const month = date.getMonth() + 1;
+    const year = date.getFullYear();
     const hour = date.getHours();
     var minute = date.getMinutes();
     if (minute < 10) minute = '0' + minute;
-    return `${hour}:${minute} ${day}/${month}`;
+    return `${hour}:${minute} ${day}/${month}/${year}`;
 }

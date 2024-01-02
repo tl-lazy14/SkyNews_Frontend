@@ -1,0 +1,164 @@
+.account-management-page {
+    background-color: #e2eaf8;
+    margin-left: 300px;
+    min-height: 713px;
+    padding: 10px 30px 30px;
+    box-sizing: border-box;
+}
+.account-management-page .top-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.account-management-page .name-page {
+    font-size: 30px;
+    text-align: left;
+}
+.account-management-page .action-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.account-management-page .role-picker select {
+    width: 200px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #312fb5;
+    color: white;
+    border: none;
+    box-sizing: border-box;
+    height: 45px;
+}
+.account-management-page .role-picker select:focus {
+    outline: none;
+    border: none;
+}
+.account-management-page .role-picker option {
+    background-color: white;
+    color: black;
+    margin-top: 10px;
+}
+.account-management-page .create-user-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: white;
+    background-color: #312fb5;
+    border-radius: 8px;
+    height: 45px;
+    padding: 12px;
+    width: 200px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.account-management-page .create-user-btn:hover {
+    background-color: #1b1994;
+}
+.account-management-page .right-action-container {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+.account-management-page .num-articles {
+    font-size: 17px;
+    color: #1b1994;
+}
+.account-management-page .search-box {
+    position: relative;
+}
+.account-management-page .search-box input {
+    font-size: 17px;
+    padding: 12px 40px 12px 20px;
+    border-radius: 8px;
+    border: 1px solid #c4c5c5;
+    width: 400px;
+    box-sizing: border-box;
+    height: 45px;
+}
+.account-management-page .search-box .icon-search {
+    position: absolute;
+    right: 10px;
+    top: 13px;
+    font-size: 17px;
+    cursor: pointer;
+}
+.account-management-page .list-account-container {
+    width: 100%;
+    margin-top: 40px;
+}
+.account-management-page table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    border-spacing: 10px 0;
+}
+.account-management-page .col-name {
+    background-color: #312fb5;
+    border: 1px solid #312fb5;
+}
+.account-management-page .col-name th {
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+}
+.account-management-page td {
+    align-items: center;
+    height: 80px;
+    text-align: center;
+}
+.account-management-page .record {
+    background-color: white;
+    border: 1px solid #aaaaaa;
+}
+.account-management-page .col-name th:first-child,
+.account-management-page .record td:first-child {
+    width: 100px;
+}
+.account-management-page .btn-delete {
+    background-color: #c83636;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin: auto;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    width: 60px;
+    text-align: center;
+}
+.account-management-page .btn-delete:hover {
+    background-color: #8b1818;
+}
+.account-management-page .pagination {
+    display: flex;
+    justify-content: center;
+    padding: 25px 0 15px;
+    gap: 15px;
+    align-items: center;
+}
+.account-management-page .btn-page {
+    color: #ffffff;
+    background-color: #312fb5;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    padding: 10px 15px;
+}
+.account-management-page .btn-page:hover {
+    background-color: #1b1994;
+}
+.account-management-page .text-page {
+    background-color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 10px 15px;
+    border: 1px solid #cccccc;
+}

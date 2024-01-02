@@ -1,0 +1,160 @@
+.create-article-page {
+    background-color: #e2eaf8;
+    margin-left: 300px;
+    padding: 10px 30px 30px;
+    box-sizing: border-box;
+}
+.create-article-page .name-page {
+    font-size: 30px;
+    text-align: left;
+}
+.create-article-page form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.create-article-page .label {
+    font-size: 17px;
+    margin-bottom: 8px;
+}
+.create-article-page .title-input {
+    font-size: 17px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: 1px solid #c4c5c5;
+    width: 600px;
+    box-sizing: border-box;
+    height: 45px;
+}
+.create-article-page .selected-main-image {
+    width: 400px;
+    margin-top: 15px;
+}
+.create-article-page .remove-image-btn {
+    margin-top: 20px;
+    width: 100px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 17px;
+    background-color: #312fb5;
+    color: white;
+    box-sizing: border-box;
+    border: none;
+    height: 45px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.create-article-page .quill {
+    background-color: white;
+}
+.create-article-page .quill .ql-editor {
+    height: 400px;
+    font-size: 17px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.create-article-page .quill .ql-editor p {
+    line-height: 1.2;
+    margin-bottom: 15px;
+}
+.create-article-page .quill .ql-editor img {
+    width: 500px;
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+.create-article-page .quill .ql-editor video {
+    width: 500px;
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+.create-article-page .quill .ql-size-small {
+    font-size: 15px !important;
+}
+.create-article-page .quill .ql-size-large {
+    font-size: 30px !important;
+}
+.create-article-page .quill .ql-size-huge {
+    font-size: 40px !important;
+}
+.create-article-page .location-input {
+    font-size: 17px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: 1px solid #c4c5c5;
+    width: 300px;
+    box-sizing: border-box;
+    height: 45px;
+}
+.create-article-page .date-input {
+    font-size: 17px;
+    padding: 0 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 8px;
+    border: 1px solid #c4c5c5;
+    box-sizing: border-box;
+    height: 45px;
+}
+.create-article-page .date-input::-webkit-calendar-picker-indicator {
+    background-image: url('../../../assets/Calendar.svg');
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    background-position: center;
+    cursor: pointer;
+} 
+.create-article-page .is-hot-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.create-article-page .is-hot-checkbox {
+    width: 20px;
+    height: 20px;
+    margin-top: -2px;
+}
+.create-article-page .select-field {
+    font-size: 17px;
+    padding: 0 15px;
+    height: 45px;
+    border-radius: 8px;
+    width: 230px;
+}
+.create-article-page .submit-container {
+    display: flex;
+    justify-content: center;
+}
+.create-article-page .save-btn {
+    width: 200px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 17px;
+    background-color: #312fb5;
+    color: white;
+    box-sizing: border-box;
+    border: none;
+    height: 45px;
+    margin: 20px 0;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.create-article-page .save-btn:hover,
+.create-article-page .remove-image-btn:hover {
+    background-color: #181775;
+}
+.create-article-page .error {
+    font-size: 15px;
+    margin-top: 8px;
+    width: 100%;
+    color: #c7092c;
+    font-weight: bold;
+}
+.create-article-page .tags-input {
+    font-size: 17px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: 1px solid #c4c5c5;
+    width: 600px;
+    box-sizing: border-box;
+    height: 45px;
+}

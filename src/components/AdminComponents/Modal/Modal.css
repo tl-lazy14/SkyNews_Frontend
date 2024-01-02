@@ -1,0 +1,165 @@
+.category-topic-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    width: 500px;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+}
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 20;
+}
+.category-topic-modal .title {
+    font-size: 23px;
+    font-weight: bold;
+    margin: 0;
+    margin-bottom: 30px;
+}
+.category-topic-modal .title .category-name {
+    color: #131277;
+}
+.category-topic-modal .input-field {
+    font-size: 17px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: 1px solid black;
+    box-sizing: border-box;
+    height: 45px;
+    width: 100%;
+}
+.category-topic-modal .input-field:focus {
+    outline: none;
+}
+.category-topic-modal .error {
+    font-size: 16px;
+    margin-top: 10px;
+    width: 100%;
+    color: #a10a25;
+    font-weight: bold;
+}
+.category-topic-modal .action-btn {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+.category-topic-modal .action-btn button {
+    width: 180px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 17px;
+    background-color: #312fb5;
+    color: white;
+    box-sizing: border-box;
+    border: none;
+    height: 45px;
+    margin: 20px 0;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.category-topic-modal .action-btn button:hover {
+    background-color: #131277;
+}
+.create-user-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    width: 480px;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+}
+.create-user-modal .title {
+    font-size: 25px;
+    font-weight: bold;
+    margin: 0;
+    margin-bottom: 30px;
+    text-align: center;
+}
+.create-user-modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.create-user-modal .label {
+    font-size: 17px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: rgb(39, 38, 38);
+}
+.create-user-modal .text-input {
+    font-size: 17px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: 1px solid rgb(39, 38, 38);
+    box-sizing: border-box;
+    height: 47px;
+    width: 100%;
+}
+.create-user-modal .password-field {
+    position: relative;
+}
+.create-user-modal .password-field .text-input {
+    padding-right: 50px;
+}
+.create-user-modal .icon-eye {
+    position: absolute;
+    right: 15px;
+    top: 42px;
+    font-size: 18px;
+    color: #131277;
+    cursor: pointer;
+    width: 20px;
+}
+.create-user-modal .select-field {
+    font-size: 17px;
+    padding: 0 15px;
+    height: 45px;
+    border-radius: 8px;
+    border: 1px solid black;
+}
+.create-user-modal .error {
+    font-size: 16px;
+    margin-top: 8px;
+    width: 100%;
+    color: #a10a25;
+}
+.create-user-modal .action-btn {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+.create-user-modal .action-btn button {
+    width: 180px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 17px;
+    background-color: #312fb5;
+    color: white;
+    box-sizing: border-box;
+    border: none;
+    height: 45px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.create-user-modal .action-btn button:hover {
+    background-color: #131277;
+}

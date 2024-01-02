@@ -102,6 +102,7 @@ const Header = () => {
                         </div>
                         {dropdownStates[0] && (
                         <div className='dropdown-content'>
+                            <div className='item' onClick={() => navigate('/user/update-info-account')}>Cập nhật thông tin tài khoản</div>
                             <div className='item' onClick={() => navigate('/user/saved-news')}>Tin đã lưu</div>
                             <div className='item' onClick={() => navigate('/user/viewed-news')}>Tin đã xem</div>
                             <div className='item'>Đăng xuất <FontAwesomeIcon className="icon" icon={faRightFromBracket} /></div>

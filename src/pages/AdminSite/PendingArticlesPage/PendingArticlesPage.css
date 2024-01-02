@@ -1,0 +1,138 @@
+.pending-articles-page {
+    background-color: #e2eaf8;
+    margin-left: 300px;
+    min-height: 713px;
+    padding: 10px 30px 30px;
+    box-sizing: border-box;
+}
+.pending-articles-page .name-page {
+    font-size: 30px;
+    text-align: left;
+}
+.pending-articles-page .action-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+}
+.pending-articles-page .num-articles {
+    font-size: 17px;
+    color: #1b1994;
+}
+.pending-articles-page .search-box {
+    position: relative;
+}
+.pending-articles-page .search-box input {
+    font-size: 17px;
+    padding: 12px 40px 12px 20px;
+    border-radius: 8px;
+    border: 1px solid #c4c5c5;
+    width: 350px;
+    box-sizing: border-box;
+    height: 45px;
+}
+.pending-articles-page .search-box .icon-search {
+    position: absolute;
+    right: 10px;
+    top: 13px;
+    font-size: 17px;
+    cursor: pointer;
+}
+.pending-articles-page .list-articles-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+.pending-articles-page .list-articles-container .article-item {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    gap: 20px;
+}
+.pending-articles-page .article-item .thumb-art {
+    width: 400px;
+    box-sizing: border-box;
+}
+.pending-articles-page .content-article {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.pending-articles-page .content-article .title-news {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1.2;
+    width: 100%;
+}
+.pending-articles-page .content-article .description {
+    color: #4f4f4f;
+    cursor: pointer;
+    font-size: 17px;
+    line-height: 1.2;
+}
+.pending-articles-page .content-article .category-topic-isHot {
+    font-size: 16px;
+    color: #7c7b7b;
+}
+.pending-articles-page .content-article .date-news {
+    color: #312fb5;
+    font-size: 16px;
+}
+.pending-articles-page .time-send-ago {
+    color: gray;
+}
+.pending-articles-page .content-article .detail-status {
+    display: flex;
+    align-self: flex-end;
+    gap: 15px;
+}
+.pending-articles-page .content-article .detail-status .btn {
+    padding: 10px 20px;
+    font-size: 17px;
+    border-radius: 8px;
+}
+.pending-articles-page .content-article .detail-status .view-detail-btn {
+    background-color: #312fb5;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.pending-articles-page .content-article .detail-status .view-detail-btn:hover {
+    background-color: #15137c;
+}
+.pending-articles-page .content-article .detail-status .pending {
+    background-color: #e7ae1d;
+    color: white;
+}
+.pending-articles-page .pagination {
+    display: flex;
+    justify-content: center;
+    padding: 25px 0 15px;
+    gap: 15px;
+    align-items: center;
+}
+.pending-articles-page .btn-page {
+    color: #ffffff;
+    background-color: #312fb5;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    padding: 10px 15px;
+}
+.pending-articles-page .btn-page:hover {
+    background-color: #1b1994;
+}
+.pending-articles-page .text-page {
+    background-color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 10px 15px;
+    border: 1px solid #cccccc;
+}

@@ -30,6 +30,12 @@ const SearchPage = () => {
         setSearchKeyword(value);
     }
 
+    const handleSelectCategoryChange = (event) => {
+        const value = event.target.value;
+        setSelectCategory(value);
+        navigate(`/search?q=${searchKeyword}`);
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
         if (searchKeyword.trim() === '') return;
@@ -40,7 +46,7 @@ const SearchPage = () => {
     useEffect(() => {
         setSearchKeyword(paramQ);
         window.scrollTo(0, 0);
-    }, [paramQ, currentPage]);
+    }, [paramQ, currentPage, selectCategory]);
 
     return (
         <>
@@ -66,7 +72,7 @@ const SearchPage = () => {
                     <div className='category-filter'>
                         <div className='filter-name'>Chuyên mục</div>
                         <div className='select-field'>
-                            <select value={selectCategory} onChange={(e) => setSelectCategory(e.target.value)}>
+                            <select value={selectCategory} onChange={handleSelectCategoryChange}>
                                 <option value="">Tất cả</option>
                                 <option value="Thời sự">Thời sự</option>
                                 <option value="Thế giới">Thế giới</option>

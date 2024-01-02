@@ -1,0 +1,198 @@
+.my-articles-page {
+    background-color: #e2eaf8;
+    margin-left: 300px;
+    min-height: 713px;
+    padding: 10px 30px 30px;
+    box-sizing: border-box;
+}
+.my-articles-page .name-page {
+    font-size: 30px;
+    text-align: left;
+}
+.my-articles-page .action-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.my-articles-page .left-action-container select {
+    width: 200px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #312fb5;
+    color: white;
+    border: none;
+    box-sizing: border-box;
+    height: 45px;
+}
+.my-articles-page .left-action-container select:focus {
+    outline: none;
+    border: none;
+}
+.my-articles-page .left-action-container option {
+    background-color: white;
+    color: black;
+    margin-top: 10px;
+}
+.my-articles-page .right-action-container {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+.my-articles-page .num-articles {
+    font-size: 17px;
+    color: #1b1994;
+}
+.my-articles-page .search-box {
+    position: relative;
+}
+.my-articles-page .search-box input {
+    font-size: 17px;
+    padding: 12px 40px 12px 20px;
+    border-radius: 8px;
+    border: 1px solid #c4c5c5;
+    width: 350px;
+    box-sizing: border-box;
+    height: 45px;
+}
+.my-articles-page .search-box .icon-search {
+    position: absolute;
+    right: 10px;
+    top: 13px;
+    font-size: 17px;
+    cursor: pointer;
+}
+.my-articles-page .list-articles-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+.my-articles-page .list-articles-container .article-item {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    gap: 20px;
+}
+.my-articles-page .article-item .thumb-art {
+    width: 400px;
+    box-sizing: border-box;
+}
+.my-articles-page .content-article {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.my-articles-page .content-article .title-news {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1.2;
+    width: 100%;
+}
+.my-articles-page .content-article .description {
+    color: #4f4f4f;
+    cursor: pointer;
+    font-size: 17px;
+    line-height: 1.2;
+}
+.my-articles-page .content-article .category-topic-isHot {
+    font-size: 16px;
+    color: #7c7b7b;
+}
+.my-articles-page .content-article .date-news {
+    color: #312fb5;
+    font-size: 16px;
+}
+.my-articles-page .approved-timestamp {
+    color: #027e31;
+    font-size: 18px;
+    font-weight: bold;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+.my-articles-page .declined-timestamp {
+    color: #c83636;
+    font-size: 18px;
+    font-weight: bold;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+.my-articles-page .content-article .detail-status {
+    display: flex;
+    align-self: flex-end;
+    gap: 15px;
+}
+.my-articles-page .content-article .detail-status .btn {
+    padding: 10px 20px;
+    font-size: 17px;
+    border-radius: 8px;
+    width: 130px;
+    text-align: center ;
+}
+.my-articles-page .content-article .detail-status .view-detail-btn {
+    background-color: #312fb5;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.my-articles-page .content-article .detail-status .view-detail-btn:hover {
+    background-color: #15137c;
+}
+.my-articles-page .content-article .detail-status .accept {
+    background-color: #05a442;
+    color: white;
+}
+.my-articles-page .content-article .detail-status .pending {
+    background-color: #e7ae1d;
+    color: white;
+}
+.my-articles-page .content-article .detail-status .decline {
+    background-color: #c83636;
+    color: white;
+}
+.my-articles-page .content-article .detail-status .not-send {
+    background-color: #2b2a28;
+    color: white;
+}
+.my-articles-page .content-article .detail-status .delete {
+    background-color: #c83636;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.my-articles-page .content-article .detail-status .delete:hover {
+    background-color: #8b1818;
+}
+.my-articles-page .pagination {
+    display: flex;
+    justify-content: center;
+    padding: 25px 0 15px;
+    gap: 15px;
+    align-items: center;
+}
+.my-articles-page .btn-page {
+    color: #ffffff;
+    background-color: #312fb5;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    padding: 10px 15px;
+}
+.my-articles-page .btn-page:hover {
+    background-color: #1b1994;
+}
+.my-articles-page .text-page {
+    background-color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 10px 15px;
+    border: 1px solid #cccccc;
+}

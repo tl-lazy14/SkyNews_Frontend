@@ -1,0 +1,73 @@
+.login-page-admin {
+    width: 100%;
+    display: flex;
+    height: 100%;
+    box-sizing: border-box;
+    justify-content: space-between;
+}
+.login-page-admin .left-container {
+    background-color: #eaeef7;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 35px 50px;
+}
+.login-page-admin .logo-login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.login-page-admin .web-name {
+    text-align: center;
+    line-height: 0.5;
+    color: #2422b0;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: bold;
+    margin-bottom: 120px;
+}
+.login-page-admin .web-name h2 {
+    font-size: 35px;
+}
+.login-page-admin .web-name h1 {
+    font-size: 48px;
+    color: #191778 !important;
+}
+.login-page-admin .illustration {
+    width: 100%;
+    display: flex;
+    box-sizing: border-box;
+    justify-content: space-between;
+    gap: 180px
+}
+.login-page-admin .illu1 {
+    margin-left: 60px;
+    margin-top: 30px;
+}
+.login-page-admin .illu2 {
+    margin-right: 50px;
+    margin-top: -30px;
+}
+.login-page-admin .contact {
+    color: #191778;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 44px;
+}
+.login-page-admin .right-container {
+    width: 100%;
+    background-color: white;
+    box-sizing: border-box;
+    padding: 0 35px;
+}
+.login-page-admin .right-container .web-logo {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 140px;
+}
+.login-page-admin .right-container .web-logo .title {
+    text-align: center;
+    color: #191778;
+    font-size: 28px;
+    font-weight: bold;
+}

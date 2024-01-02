@@ -42,7 +42,8 @@
 }
 .homepage .first-news-group .title-news:hover,
 .homepage .center-news-group .title-news:hover,
-.homepage .other-category-group-news .title-news:hover {
+.homepage .other-category-group-news .title-news:hover,
+.homepage .middle-category-group-news .title-news:hover {
     color: #03925e;
 }
 .homepage .first-news-group .news-1 .description {

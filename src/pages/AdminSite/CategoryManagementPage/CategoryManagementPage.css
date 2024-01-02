@@ -1,0 +1,114 @@
+.category-management-page {
+    background-color: #e2eaf8;
+    margin-left: 300px;
+    min-height: 713px;
+    padding: 10px 30px 30px;
+    box-sizing: border-box;
+}
+.category-management-page .name-page {
+    font-size: 30px;
+    text-align: left;
+}
+.category-management-page .action-container {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: flex-end;
+}
+.category-management-page .num-categories {
+    font-size: 17px;
+    color: #1b1994;
+}
+.category-management-page .add-category-button {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    width: 180px;
+    border-radius: 8px;
+    font-size: 17px;
+    background-color: #312fb5;
+    color: white;
+    box-sizing: border-box;
+    border: none;
+    height: 42px;
+    margin: 20px 0;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.category-management-page .add-category-button:hover {
+    background-color: #121076;
+}
+.category-management-page .list-category-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    justify-content: space-between;
+    row-gap: 90px;
+    margin-top: 30px;
+}
+.category-management-page .category-container {
+    display: flex;
+    gap: 8px;
+}
+.category-management-page .category-name {
+    background-color: #312fb5;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+    padding: 10px 20px;
+    font-size: 17px;
+    border-radius: 8px;
+    text-align: center;
+    width: 130px;
+}
+.category-management-page .action-btn {
+    background-color: #312fb5;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 17px;
+    padding: 0 15px;
+    border-radius: 8px;
+    text-align: center ;
+    align-items: center;
+    display: flex;
+}
+.category-management-page .topic-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 10px;
+}
+.category-management-page .topic-item {
+    display: flex;
+    gap: 8px;
+}
+.category-management-page .topic-name {
+    background-color: white;
+    cursor: pointer;
+    transition: 0.2s;
+    padding: 10px 20px;
+    font-size: 17px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #cccccc;
+    width: 181px;
+}
+.category-management-page .add-btn {
+    background-color: #05a442 !important;
+}
+.category-management-page .add-btn:hover {
+    background-color: #04742f !important;
+}
+.category-management-page .rename-btn {
+    background-color: #e7ae1d !important;
+}
+.category-management-page .rename-btn:hover {
+    background-color: #a7801d !important;
+}
+.category-management-page .delete-btn {
+    background-color: #c83636 !important;
+}
+.category-management-page .delete-btn:hover {
+    background-color: #931616 !important;
+}

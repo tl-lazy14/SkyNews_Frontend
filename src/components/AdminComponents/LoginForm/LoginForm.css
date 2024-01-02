@@ -1,0 +1,80 @@
+.login-form-admin {
+    width: 100%;
+    margin-top: 50px;
+}
+.login-form-admin .field-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+.login-form-admin .input-field {
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 16px;
+    height: 50px;
+    padding: 10px 20px;
+    border: 1px solid #a09f9f;
+    outline: none;
+    border-radius: 8px;
+}
+.login-form-admin .input-field:focus {
+    border: 2px solid #191778;
+}
+.login-form-admin .error {
+    font-size: 15px;
+    margin-top: 8px;
+    width: 100%;
+    color: #c71334;
+    font-weight: bold;
+}
+.login-form-admin .password-field {
+    position: relative;
+}
+.login-form-admin .password-field .icon {
+    position: absolute;
+    right: 10px;
+    top: 16px;
+    font-size: 18px;
+    color: #191778;
+    cursor: pointer;
+    width: 20px;
+}
+.login-form-admin .password-field input {
+    padding-right: 40px !important;
+}
+.login-form-admin .select-role-field {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+.login-form-admin .select-role-field .label {
+    color: #191778;
+    font-size: 16px;
+    font-weight: bold;
+}
+.login-form-admin .select-role-field select {
+    box-sizing: border-box;
+    width: 220px;
+    font-size: 16px;
+    height: 45px;
+    padding: 10px;
+    border: 1px solid #a09f9f;
+    outline: none;
+    border-radius: 8px;
+}
+.login-form-admin .submit-btn {
+    background-color: #2422b0;
+    color: white;
+    font-weight: bold;
+    width: 250px;
+    border: none;
+    transition: 0.2s;
+    cursor: pointer;
+    height: 45px;
+    font-size: 18px;
+    border-radius: 8px;
+    margin-top: 30px;
+}
+.login-form-admin .submit-btn:hover {
+    background-color: #191778;
+}
