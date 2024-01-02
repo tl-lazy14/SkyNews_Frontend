@@ -10,7 +10,6 @@ const ChangePasswordPage = () => {
         newPassword: '',
         newPasswordAgain: '',
     });
-
     const [error, setError] = useState({
         currentPassword: '',
         newPassword: '',

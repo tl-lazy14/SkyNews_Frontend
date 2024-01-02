@@ -13,7 +13,7 @@ const RenameCategoryTopicModal = ({ isModalOpen, setIsModalOpen, type }) => {
         if (keyword.trim() === '') {
             setError(`Bạn chưa nhập tên ${type === 'category' ? 'danh mục' : 'chủ đề'}`);
             return;
-        } else {
+        } else { // Cần có else if lỗi nếu tên nhập vào trùng với tên danh mục khác
             setError('');
         }
     }

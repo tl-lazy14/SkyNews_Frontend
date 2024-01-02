@@ -12,7 +12,7 @@ const AddCategoryTopicModal = ({ isModalOpen, setIsModalOpen, type }) => {
 
         if (keyword.trim() === '') {
             setError(`Bạn chưa nhập tên ${type === 'category' ? 'danh mục' : 'chủ đề'}`);
-            return;
+            return; // Cần có else if lỗi nếu tên nhập vào trùng với tên danh mục đã có
         } else {
             setError('');
         }

@@ -1,0 +1,88 @@
+.update-info-account-page .content {
+    padding: 20px 350px;
+}
+.update-info-account-page .title-page {
+    color: black;
+    background-color: #fde956;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 25px;
+    font-weight: bold;
+    padding: 10px 40px;
+    border-radius: 30px 0 30px 0;
+    width: fit-content;
+    margin-top: 10px;
+}
+.update-info-account-page .edit-container {
+    background-color: white;
+    box-sizing: border-box;
+    padding: 30px 40px;
+    width: 400px;
+    border-radius: 8px;
+    margin-top: 40px;
+}
+.update-info-account-page .title {
+    font-size: 23px;
+    font-weight: bold;
+    margin: 0;
+    margin-bottom: 30px;
+    text-align: center;
+}
+.update-info-account-page .password-field {
+    position: relative;
+    margin-top: 30px;
+}
+.update-info-account-page .icon-eye {
+    position: absolute;
+    right: 15px;
+    top: 44px;
+    font-size: 18px;
+    color: #04aa6d;
+    cursor: pointer;
+    width: 20px;
+}
+.update-info-account-page .label {
+    font-size: 17px;
+    margin-bottom: 10px;
+    color: rgb(39, 38, 38);
+}
+.update-info-account-page .text-input {
+    font-size: 17px;
+    padding: 12px 50px 12px 20px;
+    border-radius: 8px;
+    border: 1px solid #777777;
+    box-sizing: border-box;
+    height: 47px;
+    width: 100%;
+}
+.update-info-account-page .submit-btn {
+    width: 180px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 17px;
+    background-color: #04aa6d;
+    color: white;
+    box-sizing: border-box;
+    border: none;
+    height: 45px;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.2s;
+    margin: auto;
+    margin-top: 25px;
+}
+.update-info-account-page .submit-btn:hover {
+    background-color: #0a7950;
+}
+.update-info-account-page .error {
+    font-size: 16px;
+    margin-top: 8px;
+    width: 100%;
+    color: #a10a25;
+}
+.update-info-account-page .illustration {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+}

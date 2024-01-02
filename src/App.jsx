@@ -21,6 +21,7 @@ import ArticleManagementPage from "./pages/AdminSite/ArticleManagementPage/Artic
 import CategoryManagementPage from "./pages/AdminSite/CategoryManagementPage/CategoryManagementPage";
 import AccountManagementPage from "./pages/AdminSite/AccountManagementPage/AccountManagementPage";
 import ChangePasswordPage from "./pages/AdminSite/ChangePasswordPage/ChangePasswordPage";
+import UpdateInfoAccountPage from "./pages/UpdateInfoAccountPage/UpdateInfoAccountPage";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
               <Route path="/hot-news" element={<HotNewsPage />} />
               <Route path="/user/saved-news" element={<SavedNewsPage />} />
               <Route path="/user/viewed-news" element={<ViewedNewsPage />} />
+              <Route path="/user/update-info-account" element={<UpdateInfoAccountPage />} />
 
               <Route path="/admin/login" element={<LoginPage />} />
               <Route path="/admin/" element={<RootPage />}>
