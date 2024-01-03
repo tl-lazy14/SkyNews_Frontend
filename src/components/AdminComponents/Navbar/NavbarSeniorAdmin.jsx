@@ -3,9 +3,12 @@ import WebLogo from '../../../assets/Sky-News-Logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import { faLayerGroup, faRightFromBracket, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { useContext } from 'react';
+import { UserContext } from '../../userContext';
 
-const NavbarSeniorAdmin = () => {
+const NavbarSeniorAdmin = ({onLogout}) => {
 
+    const { user } = useContext(UserContext);
     const path = window.location.pathname;
     const navigate = useNavigate();
 
@@ -39,11 +42,11 @@ const NavbarSeniorAdmin = () => {
             </nav>
             <div className="user-info">
                 <div className="user-info-container">
-                    <p style={{ color: 'black', fontWeight: '600' }} className='user-name'>Nguyễn Hải Linh</p>
+                    <p style={{ color: 'black', fontWeight: '600' }} className='user-name'>{user.username}</p>
                     <p style={{opacity: 0.8, fontSize: '14px'}} className='user-role'>Quản trị viên cấp cao</p>
                 </div>
                 <div className="log-out">
-                    <FontAwesomeIcon className="icon" icon={faRightFromBracket} />
+                    <FontAwesomeIcon onClick={() => onLogout()} className="icon" icon={faRightFromBracket} />
                 </div>
             </div>
         </div>

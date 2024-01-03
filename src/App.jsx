@@ -22,43 +22,46 @@ import CategoryManagementPage from "./pages/AdminSite/CategoryManagementPage/Cat
 import AccountManagementPage from "./pages/AdminSite/AccountManagementPage/AccountManagementPage";
 import ChangePasswordPage from "./pages/AdminSite/ChangePasswordPage/ChangePasswordPage";
 import UpdateInfoAccountPage from "./pages/UpdateInfoAccountPage/UpdateInfoAccountPage";
+import { UserProvider } from "./components/userContext";
 
 function App() {
   return (
       <>
         <div className="app">
-          <Router>
-            <Routes>
-              <Route path="/" element={<Homepage />} />
-              <Route path="/category/:category/:topic?" element={<CategoryPage />} />
-              <Route path="/news/:idNews" element={<DetailNewsPage />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/newest" element={<NewestPage />} />
-              <Route path="/most-view" element={<MostViewedPage />} />
-              <Route path="/hot-news" element={<HotNewsPage />} />
-              <Route path="/user/saved-news" element={<SavedNewsPage />} />
-              <Route path="/user/viewed-news" element={<ViewedNewsPage />} />
-              <Route path="/user/update-info-account" element={<UpdateInfoAccountPage />} />
+          <UserProvider>
+            <Router>
+              <Routes>
+                <Route path="/" element={<Homepage />} />
+                <Route path="/category/:category/:topic?" element={<CategoryPage />} />
+                <Route path="/news/:idNews" element={<DetailNewsPage />} />
+                <Route path="/search" element={<SearchPage />} />
+                <Route path="/newest" element={<NewestPage />} />
+                <Route path="/most-view" element={<MostViewedPage />} />
+                <Route path="/hot-news" element={<HotNewsPage />} />
+                <Route path="/user/saved-news" element={<SavedNewsPage />} />
+                <Route path="/user/viewed-news" element={<ViewedNewsPage />} />
+                <Route path="/user/update-info-account" element={<UpdateInfoAccountPage />} />
 
-              <Route path="/admin/login" element={<LoginPage />} />
-              <Route path="/admin/" element={<RootPage />}>
-                  <Route path="journalist/my-articles" element={<MyArticlesPage />} />
-                  <Route path="journalist/create-article" element={<CreateArticlePage />} />
-                  <Route path="journalist/news/:idNews" element={<DetailNewsPageJournalist />} />
-                  <Route path="journalist/edit-news/:idNews" element={<EditArticlePage />} />
-                  <Route path="journalist/change-password" element={<ChangePasswordPage />} />
-                  <Route path="editor/pending-articles" element={<PendingArticlesPage />} />
-                  <Route path="editor/pending-articles/news/:idNews" element={<DetailNewsPageEditor />} />
-                  <Route path="editor/pending-articles/edit-news/:idNews" element={<EditArticlePage />} />
-                  <Route path="editor/list-articles" element={<ArticleManagementPage />} />
-                  <Route path="editor/list-articles/news/:idNews" element={<DetailNewsPageEditor />} />
-                  <Route path="editor/list-articles/edit-news/:idNews" element={<EditArticlePage />} />
-                  <Route path="editor/change-password" element={<ChangePasswordPage />} />
-                  <Route path="senior/category-topic" element={<CategoryManagementPage />} />
-                  <Route path="senior/account-management" element={<AccountManagementPage />} />
-              </Route>
-            </Routes>
-          </Router>
+                <Route path="/admin/login" element={<LoginPage />} />
+                <Route path="/admin/" element={<RootPage />}>
+                    <Route path="journalist/my-articles" element={<MyArticlesPage />} />
+                    <Route path="journalist/create-article" element={<CreateArticlePage />} />
+                    <Route path="journalist/news/:idNews" element={<DetailNewsPageJournalist />} />
+                    <Route path="journalist/edit-news/:idNews" element={<EditArticlePage />} />
+                    <Route path="journalist/change-password" element={<ChangePasswordPage />} />
+                    <Route path="editor/pending-articles" element={<PendingArticlesPage />} />
+                    <Route path="editor/pending-articles/news/:idNews" element={<DetailNewsPageEditor />} />
+                    <Route path="editor/pending-articles/edit-news/:idNews" element={<EditArticlePage />} />
+                    <Route path="editor/list-articles" element={<ArticleManagementPage />} />
+                    <Route path="editor/list-articles/news/:idNews" element={<DetailNewsPageEditor />} />
+                    <Route path="editor/list-articles/edit-news/:idNews" element={<EditArticlePage />} />
+                    <Route path="editor/change-password" element={<ChangePasswordPage />} />
+                    <Route path="senior/category-topic" element={<CategoryManagementPage />} />
+                    <Route path="senior/account-management" element={<AccountManagementPage />} />
+                </Route>
+              </Routes>
+            </Router>
+          </UserProvider>
         </div>
       </>
   );

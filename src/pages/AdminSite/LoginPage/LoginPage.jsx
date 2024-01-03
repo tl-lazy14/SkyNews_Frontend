@@ -3,8 +3,22 @@ import Logo from "../../../assets/Sky-News-Logo.png";
 import Illustration1 from "../../../assets/illustration1.png";
 import Illustration2 from "../../../assets/illustration2.png";
 import LoginFormAdmin from '../../../components/AdminComponents/LoginForm/LoginForm';
+import { useContext, useEffect } from 'react';
+import { UserContext } from '../../../components/userContext';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+
+    const { user } = useContext(UserContext);
+
+    const accessToken = localStorage.getItem("accessToken");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user && accessToken) {
+            if (user.role === 'ROLE_SENIOR_ADMIN') navigate('/admin/senior/account-management');
+        } 
+    }, [accessToken, navigate, user]);
 
     return (
         <div className="login-page-admin">
