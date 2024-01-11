@@ -1,9 +1,18 @@
 .detail-news-page-journalist {
     background-color: #e2eaf8;
     margin-left: 300px;
-    min-height: 713px;
     padding: 10px 30px 30px;
     box-sizing: border-box;
+}
+@media only screen and (min-height: 713px) {
+    .detail-news-page-journalist {
+      min-height: 713px;
+    }
+}
+@media only screen and (min-height: 763px) {
+    .detail-news-page-journalist {
+      min-height: 763px;
+    }
 }
 .detail-news-page-journalist .top-container {
     display: flex;

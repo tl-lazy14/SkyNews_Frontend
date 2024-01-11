@@ -1,5 +1,6 @@
 .saved-news-page .content {
     padding: 20px 350px;
+    min-height: 513px;
 }
 .saved-news-page .title-page {
     color: black;

@@ -1,10 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Modal.css';
 import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import api from '../../axiosInterceptor';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
-const CreateUserModal = ({ isModalOpen, setIsModalOpen }) => {
+const CreateUserModal = ({ isModalOpen, setIsModalOpen, setRole, updateList }) => {
+
+    const accessToken = localStorage.getItem("accessToken");
 
     const [userInfo, setUserInfo] = useState({
         username: '',
@@ -21,6 +27,7 @@ const CreateUserModal = ({ isModalOpen, setIsModalOpen }) => {
         role: '',
     });
     const [showPassword, setShowPassword] = useState(false);
+    const [listCategory, setListCategory] = useState([]);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -30,30 +37,103 @@ const CreateUserModal = ({ isModalOpen, setIsModalOpen }) => {
         }));
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const getListCategory = async () => {
+        try {
+            const response = await api.get("/category-topic/get-list-category", {
+                headers: { token: `Bearer ${accessToken}` }
+            });
+            setListCategory(response.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
-        const nameRegex = /^[a-zA-Z ÀÁÂÃÈÉÊẾÌÍÒÓÔÕÙÚĂẰẮẶẲẴẠẢẤẦẬẨẪĨĐỆỘỔỖẸẺẼỀẾỂỄỈỊỌỎỐỒỔỖỚỜỞỠỢỤỦỨỪỬỮỰỲỴỶỸàáâãèéêếìíòóôõùúăằắặẳẵạảấầậẩẫĩđệộổỗẹẻẽềếểễỷỹòỏốồổỗớờởỡợụủứừửữựỳỵỷỹ]+$/;
+    useEffect(() => {
+        getListCategory();
+    }, []);
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        let countErr = 0;
+
+        const nameRegex = /^[a-zA-Z ÀÁÂÃÈÉÊẾÌÍÒÓÔÕÙÚĂẰẮẶẲẴẠẢẤẦẬẨẪĨĐỆỘỔỖẸẺẼỀẾỂỄỈỊỌỎỐỒỔỖỚỜỞỠỢỤỦỨỪỬỮỰỲỴỶỸàáâãèéêếìíòóôồọõùúăằắặẳẵạảấầậẩẫĩịđệộổỗẹẻẽềếểễỷỹòơỏốồổỗớờởỡợụủưứừửữựỳýỵỷỹ]+$/;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         // eslint-disable-next-line no-useless-escape
         const specialCharRegex = /[`\~!@#\$%\^&\*\+\-',.<>\?\/;():"{}\|\\[\]\s]/;
 
-        if (userInfo.username.trim() === '') setError((prev) => ({...prev, username: 'Bạn chưa nhập tên người dùng'}));
-        else if (!nameRegex.test(userInfo.username)) setError((prev) => ({...prev, username: 'Tên người dùng chỉ được chứa ký tự chữ cái và dấu cách'}));
+        if (userInfo.username.trim() === '') {
+            setError((prev) => ({...prev, username: 'Bạn chưa nhập tên người dùng'}));
+            countErr++;
+        }
+        else if (!nameRegex.test(userInfo.username)) {
+            setError((prev) => ({...prev, username: 'Tên người dùng chỉ được chứa ký tự chữ cái và dấu cách'}));
+            countErr++;
+        }
         else setError((prev) => ({...prev, username: ''}));
 
-        if (userInfo.email.trim() === '') setError((prev) => ({...prev, email: 'Bạn chưa nhập email'}));
-        else if (!emailRegex.test(userInfo.email)) setError((prev) => ({...prev, email: 'Email không hợp lệ'}));
+        if (userInfo.email.trim() === '') {
+            setError((prev) => ({...prev, email: 'Bạn chưa nhập email'}));
+            countErr++;
+        }
+        else if (!emailRegex.test(userInfo.email)) {
+            setError((prev) => ({...prev, email: 'Email không hợp lệ'}));
+            countErr++;
+        }
         else setError((prev) => ({...prev, email: ''}));
 
-        if (userInfo.password.trim() === '') setError((prev) => ({...prev, password: 'Bạn chưa nhập mật khẩu'}));
-        else if (userInfo.password.length < 6 || userInfo.password.length > 14) setError((prev) => ({...prev, password: 'Mật khẩu ít nhất 6 ký tự và nhỏ hơn 15 ký tự'}));
-        else if (specialCharRegex.test(userInfo.password)) setError((prev) => ({...prev, password: 'Mật khẩu chỉ được chứa ký tự chữ và số'}));
+        if (userInfo.password.trim() === '') {
+            setError((prev) => ({...prev, password: 'Bạn chưa nhập mật khẩu'}));
+            countErr++;
+        }
+        else if (userInfo.password.length < 6 || userInfo.password.length > 14) {
+            setError((prev) => ({...prev, password: 'Mật khẩu ít nhất 6 ký tự và nhỏ hơn 15 ký tự'}));
+            countErr++;
+        }
+        else if (specialCharRegex.test(userInfo.password)) {
+            setError((prev) => ({...prev, password: 'Mật khẩu chỉ được chứa ký tự chữ và số'}));
+            countErr++;
+        }
         else setError((prev) => ({...prev, password: ''}));
 
-        if (userInfo.role === '') setError((prev) => ({...prev, role: 'Bạn chưa chọn vai trò của người dùng'}));
-        else if (userInfo.role === 'editor' && userInfo.editorCategory === '') setError((prev) => ({...prev, role: 'Bạn chưa chọn danh mục quản lý của người dùng'}));
+        if (userInfo.role === '') {
+            setError((prev) => ({...prev, role: 'Bạn chưa chọn vai trò của người dùng'}));
+            countErr++;
+        }
+        else if (userInfo.role === 'ROLE_EDITOR' && userInfo.editorCategory === '') {
+            setError((prev) => ({...prev, role: 'Bạn chưa chọn danh mục quản lý của người dùng'}));
+            countErr++;
+        }
         else setError((prev) => ({...prev, role: ''}));
+
+        if (countErr > 0) return;
+        else {
+            try {
+                // eslint-disable-next-line no-unused-vars
+                const response = await axios.post('http://localhost:8080/skynews/api/v1/auth/register', userInfo);
+                setRole(userInfo.role);
+                closeModal();
+                toast.success(`Thêm người dùng thành công!`, {
+                    position: toast.POSITION.TOP_CENTER,
+                    containerId: 'handleAddUserAdmin',
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeButton: false,
+                    theme: 'colored',
+                });
+                updateList();
+            } catch (err) {
+                if (err.response && err.response.data && err.response.data.error) {
+                    toast.error(`${err.response.data.error}`, {
+                        position: toast.POSITION.TOP_RIGHT,
+                        containerId: "handleAddUserAdmin",
+                        autoClose: 3000,
+                        hideProgressBar: true,
+                        closeButton: false,
+                        theme: 'colored',
+                    });
+                }
+            }
+        }
     };
 
     const closeModal = () => {
@@ -76,6 +156,7 @@ const CreateUserModal = ({ isModalOpen, setIsModalOpen }) => {
 
     return (
         <>
+        <ToastContainer containerId="handleAddUserAdmin" limit={1}/>
         <Modal 
             className='create-user-modal'
             isOpen={isModalOpen}
@@ -129,30 +210,18 @@ const CreateUserModal = ({ isModalOpen, setIsModalOpen }) => {
                             <div className='label'>Vai trò:</div>
                             <select value={userInfo.role} className='select-field' name='role' onChange={handleInputChange}>
                                 <option value="">Lựa chọn vai trò</option>
-                                <option value="journalist">Nhà báo</option>
-                                <option value="editor">Biên tập viên</option>
+                                <option value="ROLE_JOURNALIST">Nhà báo</option>
+                                <option value="ROLE_EDITOR">Biên tập viên</option>
                             </select>
                         </div>
-                        { userInfo.role === 'editor' && (
+                        { userInfo.role === 'ROLE_EDITOR' && (
                         <div className='field-container'>
                             <div className='label'>Danh mục quản lý:</div>
                             <select value={userInfo.editorCategory} className='select-field' name='editorCategory' onChange={handleInputChange}>
                                 <option value="">Lựa chọn danh mục</option>
-                                <option value="Thời sự">Thời sự</option>
-                                <option value="Thế giới">Thế giới</option>
-                                <option value="Kinh doanh">Kinh doanh</option>
-                                <option value="Bất động sản">Bất động sản</option>
-                                <option value="Khoa học">Khoa học</option>
-                                <option value="Giải trí">Giải trí</option>
-                                <option value="Thể thao">Thể thao</option>
-                                <option value="Pháp luật">Pháp luật</option>
-                                <option value="Giáo dục">Giáo dục</option>
-                                <option value="Sức khỏe">Sức khỏe</option>
-                                <option value="Đời sống">Đời sống</option>
-                                <option value="Du lịch">Du lịch</option>
-                                <option value="Số hóa">Số hóa</option>
-                                <option value="Xe">Xe</option>
-                                <option value="Thư giãn">Thư giãn</option>
+                                {listCategory.map((category, index) => (
+                                <option key={index} value={category.name}>{category.name}</option>
+                                ))}
                             </select>
                         </div>
                         )}

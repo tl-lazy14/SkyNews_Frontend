@@ -1,17 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import './MyArticlesPage.css';
-import News14 from '../../../assets/news14.jpg';
-import { getFormattedDateMonthYear, getFormattedTimestampComment } from '../../../utils/formatDateTime';
+import { formatDateFromResponse, formatDateTimeFromResponse } from '../../../utils/formatDateTime';
 import { useNavigate } from 'react-router-dom';
+import api from '../../../components/axiosInterceptor';
+import { getFirstParagraph } from '../../../utils/formatContentArticle';
+import { UserContext } from '../../../components/userContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MyArticlesPage = () => {
+
+    const accessToken = localStorage.getItem("accessToken");
+    const { user } = useContext(UserContext);
 
     const [filter, setFilter] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(3);
+    const [totalPages, setTotalPages] = useState(1);
+    const [listArticle, setListArticle] = useState([]);
+    const [numArticle, setNumArticle] = useState(0);
 
     const navigate = useNavigate();
 
@@ -32,25 +41,66 @@ const MyArticlesPage = () => {
         else setCurrentPage(page);
     };
 
+    const getListArticles = async () => {
+        try {
+            const response = await api.get(`/article/get-my-articles/${user.id}`, {
+                params: { 
+                    status: filter,
+                    searchQuery: searchQuery,
+                    page: currentPage,
+                    pageSize: 10,
+                },
+                headers: { token: `Bearer ${accessToken}` }
+            });
+            setListArticle(response.data.listArticle);
+            setNumArticle(response.data.numArticle);
+            setTotalPages(Math.floor(response.data.numArticle / 10) + 1);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const handleDeleteNotSendArticle = async (id) => {
+        try {
+            await api.delete(`/article/delete-not-send/${id}`, {
+                headers: { token: `Bearer ${accessToken}` }
+            });
+            toast.success('Xóa bài viết thành công!', {
+                position: toast.POSITION.TOP_CENTER,
+                containerId: "deleteArticleToast",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeButton: false,
+                theme: 'colored',
+            });
+            getListArticles();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     useEffect(() => {
+        getListArticles();
         window.scrollTo(0, 0);
     }, [currentPage, filter, searchQuery]);
 
     return (
+        <>
+        <ToastContainer containerId="deleteArticleToast" limit={1}/>
         <div className='my-articles-page'>
             <h2 className="name-page">Danh sách bài báo của tôi</h2>
             <div className='action-container'>
                 <div className='left-action-container'>
                     <select value={filter} onChange={handleFilterChange}>
                         <option value="">Tất cả</option>
-                        <option value="Chưa gửi">Chưa gửi</option>
-                        <option value="Đã được duyệt">Đã được duyệt</option>
-                        <option value="Đang chờ duyệt">Đang chờ duyệt</option>
-                        <option value="Bị từ chối">Bị từ chối</option>
+                        <option value="not-send">Chưa gửi</option>
+                        <option value="accept">Đã được duyệt</option>
+                        <option value="pending">Đang chờ duyệt</option>
+                        <option value="decline">Bị từ chối</option>
                     </select>
                 </div>
                 <div className='right-action-container'>
-                    <div className="num-articles">15 bài báo</div>
+                    <div className="num-articles">{numArticle} bài báo</div>
                     <div className="search-box">
                         <input
                             type="text"
@@ -63,272 +113,36 @@ const MyArticlesPage = () => {
                 </div>
             </div>
             <div className='list-articles-container'>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
+                {listArticle.length > 0 && listArticle.map((article, index) => (
+                <div key={index} className='article-item'>
+                    <img className='thumb-art' src={article.mainImage} alt='news' />
                     <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
+                        <div className='title-news'>{article.title}</div>
+                        <div dangerouslySetInnerHTML={{ __html: getFirstParagraph(article.content) }} className='description'></div>
                         <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
+                            <span className='category'>{article.category.name}</span>
+                            {article.topic && <span className='topic'> - {article.topic.name}</span>}
+                            {article.isHot === 1 && <span className='isHot'> - Tin nóng</span>}
                         </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='approved-timestamp'>Đã được duyệt lúc {getFormattedTimestampComment(new Date())}</div>
+                        <div className='date-news'>{formatDateFromResponse(new Date(article.dateNews).toLocaleString())}</div>
+                        {article.approvalStatus === 'accept' && <div className='approved-timestamp'>Đã được duyệt lúc {formatDateTimeFromResponse(new Date(article.decisionTimestamp).toLocaleString())}</div>}
+                        {article.approvalStatus === 'decline' && <div className='declined-timestamp'>Đã bị từ chối lúc {formatDateTimeFromResponse(new Date(article.decisionTimestamp).toLocaleString())}</div>}
                         <div className='detail-status'>
-                            <div onClick={() => navigate('/admin/journalist/news/1')} className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn accept'>Đã được duyệt</div>
-                            {/*
-                            <div className='btn pending'>Đang chờ duyệt</div>
-                            <div className='declined-timestamp'>Đã bị từ chối lúc {getFormattedTimestampComment(new Date())}</div>
-                            <div className='btn decline'>Bị từ chối</div>
-                            */}
-                        </div>
-                    </div>
-                </div>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
-                    <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
-                        <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
-                        </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='detail-status'>
-                            <div className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn pending'>Đang chờ duyệt</div>
-                        </div>
-                    </div>
-                </div>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
-                    <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
-                        <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
-                        </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='declined-timestamp'>Đã bị từ chối lúc {getFormattedTimestampComment(new Date())}</div>
-                        <div className='detail-status'>
-                            <div className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn decline'>Bị từ chối</div>
-                        </div>
-                    </div>
-                </div>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
-                    <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
-                        <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
-                        </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='detail-status'>
-                            <div className='btn delete'>
+                            {article.approvalStatus && article.approvalStatus === 'not-send' && (
+                            <div onClick={() => handleDeleteNotSendArticle(article.id)} className='btn delete'>
                                 <div>Xóa</div>
                                 <div><FontAwesomeIcon style={{fontSize: '18px'}} icon={faTrashCan} /></div>
                             </div>
-                            <div className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn not-send'>Chưa gửi</div>
+                            )}
+                            <div onClick={() => navigate(`/admin/journalist/news/${article.id}`)} className='btn view-detail-btn'>Xem chi tiết</div>
+                            {article.approvalStatus === 'accept' && <div className='btn accept'>Đã được duyệt</div>}
+                            {article.approvalStatus === 'not-send' && <div className='btn not-send'>Chưa gửi</div>}
+                            {article.approvalStatus === 'decline' && <div className='btn decline'>Bị từ chối</div>}
+                            {article.approvalStatus === 'pending' && <div className='btn pending'>Đang chờ duyệt</div>}
                         </div>
                     </div>
                 </div>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
-                    <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
-                        <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
-                        </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='detail-status'>
-                            <div className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn pending'>Đang chờ duyệt</div>
-                        </div>
-                    </div>
-                </div>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
-                    <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
-                        <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
-                        </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='detail-status'>
-                            <div className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn pending'>Đang chờ duyệt</div>
-                        </div>
-                    </div>
-                </div>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
-                    <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
-                        <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
-                        </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='detail-status'>
-                            <div className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn pending'>Đang chờ duyệt</div>
-                        </div>
-                    </div>
-                </div>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
-                    <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
-                        <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
-                        </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='detail-status'>
-                            <div className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn pending'>Đang chờ duyệt</div>
-                        </div>
-                    </div>
-                </div>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
-                    <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
-                        <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
-                        </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='detail-status'>
-                            <div className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn pending'>Đang chờ duyệt</div>
-                        </div>
-                    </div>
-                </div>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
-                    <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
-                        <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
-                        </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='detail-status'>
-                            <div className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn pending'>Đang chờ duyệt</div>
-                        </div>
-                    </div>
-                </div>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
-                    <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
-                        <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
-                        </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='detail-status'>
-                            <div className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn pending'>Đang chờ duyệt</div>
-                        </div>
-                    </div>
-                </div>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
-                    <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
-                        <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
-                        </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='detail-status'>
-                            <div className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn pending'>Đang chờ duyệt</div>
-                        </div>
-                    </div>
-                </div>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
-                    <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
-                        <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
-                        </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='detail-status'>
-                            <div className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn pending'>Đang chờ duyệt</div>
-                        </div>
-                    </div>
-                </div>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
-                    <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
-                        <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
-                        </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='detail-status'>
-                            <div className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn pending'>Đang chờ duyệt</div>
-                        </div>
-                    </div>
-                </div>
-                <div className='article-item'>
-                    <img className='thumb-art' src={News14} alt='news' />
-                    <div className='content-article'>
-                        <div className='title-news'>Ông Phan Văn Mãi: 15 năm TP HCM chưa xong 20 km metro</div>
-                        <div className='description'>TP HCM loay hoay 15-16 năm chưa xong 19,7 km Metro số 1, do đó nếu vẫn theo cách cũ phải mất 100 năm mới hoàn thành 200 km như quy hoạch, theo ông Phan Văn Mãi.</div>
-                        <div className='category-topic-isHot'>
-                            <span className='category'>Thời sự</span>
-                            <span className='topic'> - Giao thông</span>
-                            <span className='isHot'> - Tin nóng</span>
-                        </div>
-                        <div className='date-news'>{getFormattedDateMonthYear(new Date())}</div>
-                        <div className='detail-status'>
-                            <div className='btn view-detail-btn'>Xem chi tiết</div>
-                            <div className='btn pending'>Đang chờ duyệt</div>
-                        </div>
-                    </div>
-                </div>
+                ))}
             </div>
             <div className="pagination">
                 <div className="btn-page" onClick={() => handlePageChange(1)}>Trang đầu</div>
@@ -338,6 +152,7 @@ const MyArticlesPage = () => {
                 <div className="btn-page" onClick={() => handlePageChange(totalPages)}>Trang cuối</div>
             </div> 
         </div>
+        </>
     );
 }
 

@@ -2,14 +2,32 @@ import CategoryNav from '../../components/CategoryNav/CategoryNav';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
 import './HotNewsPage.css';
-import News11 from '../../assets/news11.png';
 import { useEffect, useState } from 'react';
 import { compareDate } from '../../utils/compareDate';
+import axios from 'axios';
+import { formatDateToYYYYMMDD } from '../../utils/formatDateTime';
+import { calculateTimeAgo } from '../../utils/calculateTime';
+import { useNavigate } from 'react-router-dom';
+import { getFirstParagraph } from '../../utils/formatContentArticle';
 
 const HotNewsPage = () => {
 
     const [dateArray, setDateArray] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [listArticle, setListArticle] = useState([]);
+
+    const navigate = useNavigate();
+
+    const getArticlesHotNews = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/skynews/api/v1/article/articles-hot-news', {
+                params: { date: formatDateToYYYYMMDD(selectedDate) }
+            });
+            setListArticle(response.data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     useEffect(() => {
         const currentDate = new Date();
@@ -27,7 +45,26 @@ const HotNewsPage = () => {
     }, [])
 
     useEffect(() => {
+        const updateTimes = () => {
+          setListArticle((prevList) =>
+            prevList.map((article) => ({
+              ...article,
+              timeAgo: calculateTimeAgo(article.decisionTimestamp),
+            }))
+          );
+          requestAnimationFrame(updateTimes);
+        };
+    
+        // Bắt đầu cập nhật thời gian
+        updateTimes();
+    
+        // Hủy bỏ cập nhật khi component unmount
+        return () => cancelAnimationFrame(updateTimes);
+      }, [listArticle]);
+
+    useEffect(() => {
         window.scrollTo(0, 0);
+        getArticlesHotNews();
     }, [selectedDate]);
 
     return (
@@ -45,226 +82,19 @@ const HotNewsPage = () => {
                     ))}
                 </div>
                 <div className='news-container'>
-                    <div className='news-item'>
+                    {listArticle.length > 0 && listArticle.map((article, index) => (
+                    <div key={index} className='news-item'>
                         <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
+                            <div onClick={() => navigate(`/news/${article.id}`)} className='title-news'>{article.title}</div>
+                            <div onClick={() => navigate(`/news/${article.id}`)} dangerouslySetInnerHTML={{ __html: getFirstParagraph(article.content) }} className='description'></div>
                             <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
+                                <div className='time-ago'>{article.timeAgo}</div>
+                                <div onClick={() => navigate(`/category/${article.category.name}`)} className='category'>{article.category.name}</div>
                             </div>
                         </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
+                        <div><img className='thumb-art' onClick={() => navigate(`/news/${article.id}`)} src={article.mainImage} alt='news' /></div>
                     </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Tài khoản Google không hoạt động sẽ bị xóa từ cuối tuần</div>
-                            <div className='description'>Từ cuối tuần này, Google bắt đầu tiến hành xóa những tài khoản không hoạt động trong vòng ít nhất hai năm.</div>
-                            <div className='time-category'>
-                                <div className='time-ago'>2h trước</div>
-                                <div className='category'>Số hóa</div>
-                            </div>
-                        </div>
-                        <div><img className='thumb-art' src={News11} alt='news' /></div>
-                    </div>
+                    ))}
                 </div>
             </div>
             <Footer />

@@ -1,5 +1,6 @@
 .newest-page .content {
     padding: 20px 350px;
+    min-height: 513px;
 }
 .newest-page .title-page {
     color: black;

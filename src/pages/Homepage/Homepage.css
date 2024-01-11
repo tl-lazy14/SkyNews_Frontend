@@ -1,5 +1,6 @@
 .homepage .content {
     padding: 20px 200px;
+    min-height: 513px;
 }
 .homepage .first-news-group {
     display: grid;
@@ -89,7 +90,6 @@
     display: -webkit-box;
     -webkit-line-clamp: 7;
     -webkit-box-orient: vertical;
-    margin-top: 5px;
 }
 .homepage .first-news-group .bottom-news {
     display: relative;
@@ -160,6 +160,7 @@
     -webkit-line-clamp: 6;
     -webkit-box-orient: vertical;
     font-size: 15px;
+    margin-top: -12px;
 }
 .homepage .center-news-group .right-container .news-by-category {
     background-color: rgb(135, 217, 166);
@@ -231,7 +232,6 @@
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     font-size: 15px;
-    margin-top: 10px;
 }
 .homepage .center-news-group .right-container .news-2 .title-news {
     font-size: 18px;
@@ -251,7 +251,6 @@
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     font-size: 15px;
-    margin-top: 10px;
 }
 .homepage .center-news-group .right-container .bottom-news {
     display: flex;

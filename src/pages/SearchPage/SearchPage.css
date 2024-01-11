@@ -1,5 +1,6 @@
 .search-page .content {
     padding: 20px 350px;
+    min-height: 513px;
 }
 .search-page .content .search-container {
     box-sizing: border-box;

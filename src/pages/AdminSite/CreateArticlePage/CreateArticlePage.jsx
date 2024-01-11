@@ -1,21 +1,34 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import './CreateArticlePage.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { convertLocaleStringToCustomDateFormat } from '../../../utils/formatDateTime';
+import api from '../../../components/axiosInterceptor';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../../components/userContext';
+import axios from 'axios';
 
 const CreateArticlePage = () => {
+
+    const accessToken = localStorage.getItem("accessToken");
+    const navigate = useNavigate();
+    const { user } = useContext(UserContext);
 
     const [article, setArticle] = useState({
         title: '',
         mainImage: '',
         content: '',
         location: '',
-        date: new Date().toISOString().split("T")[0],
+        date: convertLocaleStringToCustomDateFormat(new Date().toLocaleString()),
         isHot: false,
         category: '',
         topic: '',
         tags: '',
     });
+    const [listCategory, setListCategory] = useState([]);
+    const [listTopic, setListTopic] = useState([]);
 
     const [error, setError] = useState({
         title: '',
@@ -55,36 +68,112 @@ const CreateArticlePage = () => {
         }));
     };
 
-    const handleSubmit = (event) => {
+    const getListCategory = async () => {
+        try {
+            const response = await api.get("/category-topic/get-list-category", {
+                headers: { token: `Bearer ${accessToken}` }
+            });
+            setListCategory(response.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const getListTopicByCategory = async (categoryName) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/skynews/api/v1/category-topic/get-list-topic/${categoryName}`);
+            setListTopic(response.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        if (article.category !== '') {
+            getListTopicByCategory(article.category);
+        } else {
+            setListTopic([]);
+        }
+    }, [article.category]);
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        let countErr = 0;
 
         const onlySpaceRegex = /^\s*$/;
 
-        if (article.title.trim() === '') setError((prev) => ({...prev, title: 'Bạn chưa nhập tiêu đề'}));
+        if (article.title.trim() === '') {
+            setError((prev) => ({...prev, title: 'Bạn chưa nhập tiêu đề'}));
+            countErr++;
+        }
         else setError((prev) => ({...prev, title: ''}));
 
-        if (article.mainImage === '') setError((prev) => ({...prev, mainImage: 'Bạn chưa chọn ảnh đại diện'}));
+        if (article.mainImage === '') {
+            setError((prev) => ({...prev, mainImage: 'Bạn chưa chọn ảnh đại diện'}));
+            countErr++;
+        }
         else setError((prev) => ({...prev, mainImage: ''}));
 
         const strippedContent = article.content.replace(/<[^>]*>/g, '');
-        if (article.content.trim() === '' || onlySpaceRegex.test(strippedContent) || article.content === '<p><br></p>') setError((prev) => ({...prev, content: 'Bạn chưa nhập nội dung'}));
+        if (article.content.trim() === '' || onlySpaceRegex.test(strippedContent) || article.content === '<p><br></p>') {
+            setError((prev) => ({...prev, content: 'Bạn chưa nhập nội dung'}));
+            countErr++;
+        }
         else setError((prev) => ({...prev, content: ''}));
 
         if (new Date(article.date) < new Date(new Date().toISOString().split("T")[0])) {
             setError((prev) => ({...prev, date: 'Không được chọn ngày đã qua'}));
+            countErr++;
         }
         else setError((prev) => ({...prev, date: ''}));
 
-        if (article.category === '') setError((prev) => ({...prev, category: 'Bạn chưa chọn danh mục'}));
+        if (article.category === '') {
+            setError((prev) => ({...prev, category: 'Bạn chưa chọn danh mục'}));
+            countErr++;
+        }
         else setError((prev) => ({...prev, category: ''}));
+
+        if (countErr > 0) return;
+        else {
+            try {
+                // eslint-disable-next-line no-unused-vars
+                await api.post('/article/create-article', {
+                    title: article.title,
+                    mainImage: article.mainImage,
+                    content: article.content,
+                    location: article.location,
+                    date: article.date,
+                    authorId: user.id,
+                    isHot: article.isHot ? 1 : 0,
+                    category: article.category,
+                    topic: article.topic,
+                    tags: article.tags,
+                }, {
+                    headers: { token: `Bearer ${accessToken}` }
+                });
+                toast.success(`Tạo bài báo thành công!`, {
+                    position: toast.POSITION.TOP_CENTER,
+                    containerId: 'handleCreateArticle',
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeButton: false,
+                    theme: 'colored',
+                });
+                navigate('/admin/journalist/my-articles');
+            } catch (err) {
+                console.log(err);
+            }
+        }
     };
 
     useEffect(() => {
+        getListCategory();
         window.scrollTo(0, 0);
     }, []);
 
     return (
         <>
+        <ToastContainer containerId="handleCreateArticle" limit={1}/>
         <div className='create-article-page'>
             <h2 className="name-page">Tạo bài báo mới</h2>
             <form onSubmit={handleSubmit}>
@@ -179,7 +268,7 @@ const CreateArticlePage = () => {
                             onChange={() => {
                                 setArticle((prev) => ({
                                     ...prev,
-                                    isHot: !article.isHot,
+                                    isHot: !prev.isHot,
                                 }));
                             }}
                         />
@@ -189,21 +278,9 @@ const CreateArticlePage = () => {
                     <div className='label'>Danh mục:</div>
                     <select value={article.category} className='select-field' name='category' onChange={handleInputChange}>
                         <option value="">Lựa chọn danh mục</option>
-                        <option value="Thời sự">Thời sự</option>
-                        <option value="Thế giới">Thế giới</option>
-                        <option value="Kinh doanh">Kinh doanh</option>
-                        <option value="Bất động sản">Bất động sản</option>
-                        <option value="Khoa học">Khoa học</option>
-                        <option value="Giải trí">Giải trí</option>
-                        <option value="Thể thao">Thể thao</option>
-                        <option value="Pháp luật">Pháp luật</option>
-                        <option value="Giáo dục">Giáo dục</option>
-                        <option value="Sức khỏe">Sức khỏe</option>
-                        <option value="Đời sống">Đời sống</option>
-                        <option value="Du lịch">Du lịch</option>
-                        <option value="Số hóa">Số hóa</option>
-                        <option value="Xe">Xe</option>
-                        <option value="Thư giãn">Thư giãn</option>
+                        {listCategory.map((category, index) => (
+                        <option key={index} value={category.name}>{category.name}</option>
+                        ))}
                     </select>
                     <div className='error'>{error.category}</div>
                 </div>
@@ -211,10 +288,9 @@ const CreateArticlePage = () => {
                     <div className='label'>Chủ đề:</div>
                     <select value={article.topic} className='select-field' name='topic' onChange={handleInputChange}>
                         <option value="">Không</option>
-                        <option value="Chính trị">Chính trị</option>
-                        <option value="Dân sinh">Dân sinh</option>
-                        <option value="Lao động - Việc làm">Lao động - Việc làm</option>
-                        <option value="Giao thông">Giao thông</option>
+                        {listTopic.length > 0 && listTopic.map((topic, index) => (
+                        <option key={index} value={topic.name}>{topic.name}</option>
+                        ))}
                     </select>
                 </div>
                 <div className='tags-field'>

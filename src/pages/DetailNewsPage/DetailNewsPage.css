@@ -1,5 +1,6 @@
 .detail-news-page .content {
     padding: 20px 350px;
+    min-height: 513px;
 }
 .detail-news-page .news-content {
     width: 100%;

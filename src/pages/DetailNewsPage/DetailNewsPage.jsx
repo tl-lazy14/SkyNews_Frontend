@@ -5,35 +5,109 @@ import './DetailNewsPage.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faBookmark } from '@fortawesome/free-solid-svg-icons';
 import { getFormattedDateTime } from '../../utils/formatDateTime';
-import News8 from '../../assets/news8.png';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import React from 'react';
 import InputComment from '../../components/InputComment/InputComment';
 import Comment from '../../components/Comment/Comment';
-/*
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-*/
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
+import { UserContext } from '../../components/userContext';
+import api from '../../components/axiosInterceptor';
 
 const DetailNewsPage = () => {
 
     const [save, setSave] = useState(false);
     const [selectCommentReply, setSelectCommentReply] = useState();
-    const tagsArray = ["cạnh tranh", "dừng hoạt động", "giao đồ ăn", "Baemin Việt Nam"];
+    const { idNews } = useParams();
+    const [article, setArticle] = useState({});
+    const [tags, setTags] = useState([]);
+    const [listComment, setListComment] = useState([]);
+    const [numComment, setNumComment] = useState(0);
+
+    const navigate = useNavigate();
+    const { user } = useContext(UserContext);
+    const accessToken = localStorage.getItem("accessToken");
+    const hash = window.location.hash.substring(1);
+
+    const getArticle = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/skynews/api/v1/article/detail/${idNews}`);
+            setArticle(response.data.article);
+            setTags(response.data.tags);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const getListComment = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/skynews/api/v1/article/list-comment/${idNews}/${(user && accessToken) ? user.id : 0}`);
+            const comments = response.data;
+            setListComment(comments);
+            let numComment = 0;
+            for (let x of comments) {
+                numComment = numComment + 1 + x.childComments.length;
+            }
+            setNumComment(numComment);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const checkIsUserSaveNews = async () => {
+        try {
+            const response = await api.get(`/article/check-save/${user.id}/${idNews}`, {
+                headers: { token: `Bearer ${accessToken}` }
+            });
+            const isSave = response.data.isSave === 1 ? true : false;
+            setSave(isSave);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const addViewArticle = async () => {
+        try {
+            await api.put(`/article/add-view/${idNews}/${(user && accessToken) ? user.id : 0}`);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const handleSaveArticle = async () => {
+        try {
+            const response = await api.get(`/article/handle-save/${user.id}/${idNews}`, {
+                headers: { token: `Bearer ${accessToken}` }
+            });
+            const isSave = response.data.isSave === 1 ? true : false;
+            setSave(isSave);
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     const handleReplyClick = (commentId) => {
         setSelectCommentReply(commentId);
     };
 
     useEffect(() => {
+        getArticle();
+        if (user && accessToken) checkIsUserSaveNews();
+        getListComment();
+        addViewArticle();
         window.scrollTo(0, 0);
-    }, []);
-    /* const [contentQuill, setContentQuill] = useState(''); */
-    /*
-    const handleEditorChange = (value) => {
-        setContentQuill(value);
-    };
-    */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hash]);
+
+    useEffect(() => {
+        if (hash) {
+          // Tìm phần tử có ID tương ứng và cuộn trang đến đó
+          const targetElement = document.getElementById(hash);
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+    }, [listComment]);
 
     return (
         <>
@@ -44,71 +118,56 @@ const DetailNewsPage = () => {
                 <div className='news-content'>
                     <div className='header-content'>
                         <div className='category-topic'>
-                            <div className='category-name'>Kinh doanh</div>
-                            <div><FontAwesomeIcon className='icon-right' icon={faAngleRight} /></div>
-                            <div className='topic-name'>Doanh nghiệp</div>
+                            <div onClick={() => navigate(`/category/${article.category?.name}`)} className='category-name'>{article.category?.name}</div>
+                            {article.topic && (<div><FontAwesomeIcon className='icon-right' icon={faAngleRight} /></div>)}
+                            {article.topic && (<div onClick={() => navigate(`/category/${article.category?.name}/${article.topic?.name}`)} className='topic-name'>{article.topic?.name}</div>)}
                         </div>
                         <div className='time'>
-                            {getFormattedDateTime(new Date())}
+                            {getFormattedDateTime(new Date(article.decisionTimestamp))}
                         </div>
                     </div>
                     <div className='news-body'>
-                        <div className='title-news'>Baemin dừng hoạt động tại Việt Nam</div>
-                        <div className='description'>
-                            {/* <div dangerouslySetInnerHTML={{ __html: contentQuill }} /> */}
-                            <p>Ông lớn giao đồ ăn Hàn Quốc Baemin thông báo chia tay thị trường Việt Nam từ 8/12, hai tháng sau khi nói "thu hẹp hoạt động".</p>
-                            <p>Xác nhận với VnExpress, đại diện Baemin Việt Nam - ứng dụng giao đồ ăn - cho biết sẽ "chính thức dừng hoạt động tại thị trường Việt Nam từ ngày 8/12". Thông báo về việc này cũng đã được hãng gửi đến các khách hàng trong hôm nay.</p>
-                            <p>"Quyết định rời khỏi Việt Nam của Baemin được thúc đẩy bởi tình hình kinh tế khó khăn trên toàn cầu, cũng như thực trạng cạnh tranh khốc liệt của thị trường nước sở tại", thông báo của công ty cho hay.</p>
-                            <p>Delivery Hero, công ty mẹ của Baemin Việt Nam, cho biết chiến lược lúc này là tập trung các thị trường đang dẫn đầu và có khả năng dẫn đầu. Tại Việt Nam, ưu tiên hàng đầu của ứng dụng này trong vài tuần tới là hỗ trợ cũng như hoàn tất nghĩa vụ và trách nhiệm với toàn thể nhân viên, các đối tác tài xế và đối tác nhà hàng.</p>
-                            <p>Trước đó, cuối tháng 9, ông lớn giao đồ ăn của Hàn Quốc đã thông báo thu hẹp hoạt động. Trong một email gửi tới nhân viên Baemin Việt Nam khi đó, bà Cao Thị Ngọc Loan, Giám đốc điều hành tạm thời của Baemin Việt Nam, cho biết việc thu hẹp bởi thị trường giao đồ ăn đầy thách thức ở Việt Nam.</p>
-                            <p><img src={News8} alt='thumb-art' /></p>
-                            <p>Baemin được vận hành bởi Woowa Brothers Việt Nam, thành viên của liên doanh giữa Woowa Brothers - công ty giao đồ ăn đứng đầu tại Hàn Quốc và Delivery Hero - tập đoàn công nghệ giao đồ ăn tại hơn 50 quốc gia. Bên cạnh lĩnh vực giao đồ ăn cốt lõi, Baemin còn cung cấp một số dịch vụ khác như đi chợ hộ, cửa hàng bách hóa trực tuyến, bán mỹ phẩm.</p>
-                            <p>Thương hiệu này bắt đầu xuất hiện ở Việt Nam từ giữa năm 2019 sau khi hoàn tất thâu tóm ứng dụng giao đồ ăn Việt Nam. Ông lớn Hàn Quốc gia nhập đúng thời điểm thị trường giao đồ ăn đang sôi động. Hàng loạt tên tuổi trong và ngoài nước tham gia thị trường, "đốt tiền" cho cuộc đua giành thị phần bằng cách tung ra khuyến mãi "khủng".</p>
-                            <p>Hồi tháng 8, Niklas Östberg, đồng sáng lập, kiêm CEO Delivery Hero, nói với Reuters rằng triển vọng của công ty tại châu Á là tích cực, trừ Việt Nam - thị trường họ cho rằng hoạt động kinh doanh "không bao giờ có lãi".</p>
-                            <p>Trong khi các đối thủ lớn như Grab, ShopeeFood thường xuyên khuyến mãi lớn để thu hút khách hàng, chính sách này lại không phải là yếu tố Baemin ưu tiên. Kết quả là sự hụt hơi trong cuộc đua thị phần. Thống kê của Momentum Works, năm 2022, Baemin chỉ nắm 12% thị phần giao đồ ăn tại Việt Nam, còn Grab chiếm 45%, ShopeeFood chiếm 41%.</p>
-                        </div>
-                        <div className='author-name'>Minh Sơn</div>
+                        <div className='title-news'>{article.title}</div>
+                        <div dangerouslySetInnerHTML={{ __html: article.content }} className='description'></div>
+                        <div className='author-name'>{article.authorName}</div>
                         <div className='list-tag-container'>
                             <div className='title'>Tags:</div>
                             <div className='list-tag'>
-                                {tagsArray.map((tag, index) => (
+                                {tags.length > 0 && tags.map((tag, index) => (
                                     <React.Fragment key={index}>
                                         <div className="item">{tag}</div>
-                                        {index < tagsArray.length - 1 && <div style={{ color: '#aaaaaa', fontSize: '18px' }}>/</div>}
+                                        {index < tags.length - 1 && <div style={{ color: '#aaaaaa', fontSize: '18px' }}>/</div>}
                                     </React.Fragment>
                                 ))}
                             </div>
                         </div>
                     </div>
                     <div className='action-button'>
-                        <div className='btn-back btn'>Trở lại Kinh doanh</div>
-                        <div className='btn-save-news btn' onClick={() => setSave(!save)}>
+                        <div className='btn-back btn' onClick={() => navigate(`/category/${article.category?.name}`)}>Trở lại {article.category?.name}</div>
+                        {user && accessToken && (
+                        <div className='btn-save-news btn' onClick={handleSaveArticle}>
                             <div><FontAwesomeIcon className={`bookmark-icon ${save ? 'bookmark-icon-saved' : ''}`} icon={faBookmark} /></div>
                             <div>Lưu</div>
                         </div>
+                        )}
                     </div>
                 </div>
                 <div className='comment-container'>
-                    <div className='title'><span className='title-name'>Bình luận</span> (7)</div>
-                    <InputComment />
+                    <div className='title'><span className='title-name'>Bình luận</span> ({numComment})</div>
+                    <InputComment updateListComment={getListComment} commentReplied={0} onReplyClick={handleReplyClick} />
                     <div className='list-comment'>
-                        <div className='comment-group'>
-                            <Comment id={1} onReplyClick={handleReplyClick} selectedCommentReply={selectCommentReply} />
+                        {listComment.length > 0 && listComment.map((parentComment, index) => (
+                        <div key={index} className='comment-group'>
+                            <Comment updateListComment={getListComment} id={parentComment.parentComment.id} comment={parentComment.parentComment} onReplyClick={handleReplyClick} selectedCommentReply={selectCommentReply} />
+                            {parentComment.childComments.length > 0 && (
                             <div className='comment-child-group'>
-                                <Comment id={2} onReplyClick={handleReplyClick} selectedCommentReply={selectCommentReply} />
-                                <Comment id={3} onReplyClick={handleReplyClick} selectedCommentReply={selectCommentReply} />
-                                <Comment id={4} onReplyClick={handleReplyClick} selectedCommentReply={selectCommentReply} />
+                                {parentComment.childComments.map((childComment, index) => (
+                                <Comment updateListComment={getListComment} id={childComment.id} comment={childComment} onReplyClick={handleReplyClick} selectedCommentReply={selectCommentReply} />
+                                ))}
                             </div>
+                            )}
                         </div>
-                        <div className='comment-group'>
-                            <Comment id={5} onReplyClick={handleReplyClick} selectedCommentReply={selectCommentReply} />
-                        </div>
-                        <div className='comment-group'>
-                            <Comment id={6} onReplyClick={handleReplyClick} selectedCommentReply={selectCommentReply} />
-                            <div className='comment-child-group'>
-                                <Comment id={7} onReplyClick={handleReplyClick} selectedCommentReply={selectCommentReply} />
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>  
             </div>
@@ -117,31 +176,5 @@ const DetailNewsPage = () => {
         </>
     );
 }
-/*
-<ReactQuill
-    className='quill'
-    value={contentQuill}
-    theme='snow'
-    onChange={handleEditorChange}
-    modules={{
-        toolbar: {
-        container: [
-            [{ header: "1" }, { header: "2" }],
-            [{ size: [] }],
-            ["bold", "italic", "underline", "strike", "blockquote"],
-            [
-            { list: "ordered" },
-            { list: "bullet" },
-            { indent: "-1" },
-            { indent: "+1" },
-            ],
-            ["link", "image", "video"],
-            ["code-block"],
-            ["clean"],
-            ],
-        },
-    }}
-/>
-*/
 
 export default DetailNewsPage;

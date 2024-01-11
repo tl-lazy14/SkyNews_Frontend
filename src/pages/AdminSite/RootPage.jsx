@@ -1,4 +1,6 @@
 import SeniorAdminSite from "./Site/SeniorAdminSite";
+import JournalistSite from "./Site/JournalistSite";
+import EditorSite from "./Site/EditorSite";
 import { useContext, useEffect } from "react";
 import { UserContext } from "../../components/userContext";
 import { useNavigate } from "react-router-dom";
@@ -48,6 +50,8 @@ const RootPage = () => {
         <>
             <ToastContainer containerId="welcome" limit={1}/>
             { user && user.role === 'ROLE_SENIOR_ADMIN' && <SeniorAdminSite onLogout={handleLogout} /> }
+            { user && user.role === 'ROLE_JOURNALIST' && <JournalistSite onLogout={handleLogout} /> }
+            { user && user.role === 'ROLE_EDITOR' && <EditorSite onLogout={handleLogout} /> }
         </>
     );
 }

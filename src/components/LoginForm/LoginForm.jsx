@@ -1,9 +1,13 @@
 import './LoginForm.css';
 import Logo from "../../assets/Sky-News-Logo.png";
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+import { UserContext } from '../userContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginForm = ({ isModalOpen, setIsModalOpen, openRegisterForm }) => {
 
@@ -16,6 +20,8 @@ const LoginForm = ({ isModalOpen, setIsModalOpen, openRegisterForm }) => {
         errorPassword: '',
     });
     const [showPassword, setShowPassword] = useState(false);
+
+    const { login } = useContext(UserContext);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -38,21 +44,71 @@ const LoginForm = ({ isModalOpen, setIsModalOpen, openRegisterForm }) => {
         setShowPassword(false);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        let countError = 0;
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         // eslint-disable-next-line no-useless-escape
         const specialCharRegex = /[`\~!@#\$%\^&\*\+\-',.<>\?\/;():"{}\|\\[\]\s]/;
 
-        if (loginInfo.email.trim() === '') setError((prev) => ({...prev, errorEmail: 'Bạn chưa nhập email'}));
-        else if (!emailRegex.test(loginInfo.email)) setError((prev) => ({...prev, errorEmail: 'Email không hợp lệ'}));
+        if (loginInfo.email.trim() === '') {
+            countError++;
+            setError((prev) => ({...prev, errorEmail: 'Bạn chưa nhập email'}));
+        }
+        else if (!emailRegex.test(loginInfo.email)) {
+            countError++;
+            setError((prev) => ({...prev, errorEmail: 'Email không hợp lệ'}));
+        }
         else setError((prev) => ({...prev, errorEmail: ''}));
 
-        if (loginInfo.password.trim() === '') setError((prev) => ({...prev, errorPassword: 'Bạn chưa nhập mật khẩu'}));
-        else if (loginInfo.password.length < 6 || loginInfo.password.length > 14) setError((prev) => ({...prev, errorPassword: 'Mật khẩu phải có ít nhất 6 ký tự và nhỏ hơn 15 ký tự'}));
-        else if (specialCharRegex.test(loginInfo.password)) setError((prev) => ({...prev, errorPassword: 'Mật khẩu chỉ được chứa ký tự chữ và số'}));
+        if (loginInfo.password.trim() === '') {
+            countError++;
+            setError((prev) => ({...prev, errorPassword: 'Bạn chưa nhập mật khẩu'}));
+        }
+        else if (loginInfo.password.length < 6 || loginInfo.password.length > 14) {
+            countError++;
+            setError((prev) => ({...prev, errorPassword: 'Mật khẩu phải có ít nhất 6 ký tự và nhỏ hơn 15 ký tự'}));
+        }
+        else if (specialCharRegex.test(loginInfo.password)) {
+            countError++;
+            setError((prev) => ({...prev, errorPassword: 'Mật khẩu chỉ được chứa ký tự chữ và số'}));
+        }
         else setError((prev) => ({...prev, errorPassword: ''}));
+
+        if (countError > 0) return;
+        else {
+            try {
+                const response = await axios.post(`http://localhost:8080/skynews/api/v1/auth/login`, { 
+                    email: loginInfo.email,
+                    password: loginInfo.password, 
+                    role: 'ROLE_USER'
+                });
+                const user = response.data;
+                localStorage.setItem('accessToken', user.accessToken);
+                localStorage.setItem('userID', user.id);
+                login(user);
+                toast.success('Đăng nhập thành công!', {
+                    position: toast.POSITION.TOP_CENTER,
+                    containerId: "LoginUserToast",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeButton: true,
+                    theme: 'colored',
+                });
+                closeModal();
+            } catch (err) {
+                toast.error('Tài khoản hoặc mật khẩu không đúng. Vui lòng nhập lại', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    containerId: "LoginUserToast",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeButton: true,
+                    theme: 'colored',
+                });
+                return;
+            }
+        }
     }
 
     const handleOpenRegisterForm = () => {
@@ -62,6 +118,7 @@ const LoginForm = ({ isModalOpen, setIsModalOpen, openRegisterForm }) => {
 
     return (
         <>
+        <ToastContainer containerId="LoginUserToast" limit={1}/>
         <Modal 
             className='login-form'
             isOpen={isModalOpen}

@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 const RegisterForm = ({ isModalOpen, setIsModalOpen, openLoginForm }) => {
 
@@ -28,6 +29,7 @@ const RegisterForm = ({ isModalOpen, setIsModalOpen, openLoginForm }) => {
         showRePassword: false,
     });
     const [isGettingCode, setIsGettingCode] = useState(false);
+    const [verificationCode, setVerificationCode] = useState('');
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -59,52 +61,130 @@ const RegisterForm = ({ isModalOpen, setIsModalOpen, openLoginForm }) => {
         });
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        let countErr = 0;
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         // eslint-disable-next-line no-useless-escape
         const specialCharRegex = /[`\~!@#\$%\^&\*\+\-',.<>\?\/;():"{}\|\\[\]]/;
-        const alphanumericRegex = /^[a-zA-Z0-9]+$/;
+        const alphanumericRegex = /^[0-9]+$/;
 
-        if (registerInfo.username.trim() === '') setError((prev) => ({...prev, errorUsername: 'Bạn chưa nhập tên tài khoản'}));
+        if (registerInfo.username.trim() === '') {
+            setError((prev) => ({...prev, errorUsername: 'Bạn chưa nhập tên tài khoản'}));
+            countErr++;
+        }
         else setError((prev) => ({...prev, errorUsername: ''}));
 
-        if (registerInfo.email.trim() === '') setError((prev) => ({...prev, errorEmail: 'Bạn chưa nhập email'}));
-        else if (!emailRegex.test(registerInfo.email)) setError((prev) => ({...prev, errorEmail: 'Email không hợp lệ'}));
+        if (registerInfo.email.trim() === '') {
+            setError((prev) => ({...prev, errorEmail: 'Bạn chưa nhập email'}));
+            countErr++;
+        }
+        else if (!emailRegex.test(registerInfo.email)) {
+            setError((prev) => ({...prev, errorEmail: 'Email không hợp lệ'}));
+            countErr++;
+        }
         else setError((prev) => ({...prev, errorEmail: ''}));
 
-        if (registerInfo.password.trim() === '') setError((prev) => ({...prev, errorPassword: 'Bạn chưa nhập mật khẩu'}));
-        else if (registerInfo.password.length < 6 || registerInfo.password.length > 14) setError((prev) => ({...prev, errorPassword: 'Mật khẩu ít nhất 6 ký tự và nhỏ hơn 15 ký tự'}));
-        else if (specialCharRegex.test(registerInfo.password)) setError((prev) => ({...prev, errorPassword: 'Mật khẩu chỉ được chứa ký tự chữ và số'}));
+        if (registerInfo.password.trim() === '') {
+            setError((prev) => ({...prev, errorPassword: 'Bạn chưa nhập mật khẩu'}));
+            countErr++;
+        }
+        else if (registerInfo.password.length < 6 || registerInfo.password.length > 14) {
+            setError((prev) => ({...prev, errorPassword: 'Mật khẩu ít nhất 6 ký tự và nhỏ hơn 15 ký tự'}));
+            countErr++;
+        }
+        else if (specialCharRegex.test(registerInfo.password)) {
+            setError((prev) => ({...prev, errorPassword: 'Mật khẩu chỉ được chứa ký tự chữ và số'}));
+            countErr++;
+        }
         else setError((prev) => ({...prev, errorPassword: ''}));
 
-        if (registerInfo.rePassword.trim() === '') setError((prev) => ({...prev, errorRePassword: 'Bạn chưa nhập lại mật khẩu'}));
-        else if (registerInfo.rePassword.trim() !== registerInfo.password.trim()) setError((prev) => ({...prev, errorRePassword: 'Mật khẩu nhập lại chưa chính xác'}));
+        if (registerInfo.rePassword.trim() === '') {
+            setError((prev) => ({...prev, errorRePassword: 'Bạn chưa nhập lại mật khẩu'}));
+            countErr++;
+        }
+        else if (registerInfo.rePassword.trim() !== registerInfo.password.trim()) {
+            setError((prev) => ({...prev, errorRePassword: 'Mật khẩu nhập lại chưa chính xác'}));
+            countErr++;
+        }
         else setError((prev) => ({...prev, errorRePassword: ''}));
 
-        if (registerInfo.verificationCode.trim() === '') setError((prev) => ({...prev, errorVerificationCode: 'Bạn chưa nhập mã xác thực'}));
-        else if (!alphanumericRegex.test(registerInfo.verificationCode)) setError((prev) => ({...prev, errorVerificationCode: 'Mã xác thực chỉ chứa ký tự chữ cái hoặc số'}));
+        if (registerInfo.verificationCode.trim() === '') {
+            setError((prev) => ({...prev, errorVerificationCode: 'Bạn chưa nhập mã xác thực'}));
+            countErr++;
+        }
+        else if (!alphanumericRegex.test(registerInfo.verificationCode)) {
+            setError((prev) => ({...prev, errorVerificationCode: 'Mã xác thực chỉ chứa ký tự số'}));
+            countErr++;
+        }
+        else if (registerInfo.verificationCode !== verificationCode) {
+            setError((prev) => ({...prev, errorVerificationCode: 'Mã xác thực không đúng. Vui lòng thử lại.'}));
+            countErr++;
+        }
         else setError((prev) => ({...prev, errorVerificationCode: ''}));
+
+        if (countErr > 0) return;
+        else {
+            try {
+                // eslint-disable-next-line no-unused-vars
+                const response = await axios.post('http://localhost:8080/skynews/api/v1/auth/register', {
+                    username: registerInfo.username,
+                    email: registerInfo.email,
+                    password: registerInfo.password,
+                    role: 'ROLE_USER',
+                    editorCategory: ''
+                });
+                toast.success(`Đăng ký tài khoản thành công! Vui lòng đăng nhập.`, {
+                    position: toast.POSITION.TOP_RIGHT,
+                    containerId: 'RegisterAccountToast',
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeButton: false,
+                    theme: 'colored',
+                });
+                handleOpenLoginForm();
+            } catch (err) {
+                if (err.response && err.response.data && err.response.data.error) {
+                    toast.error(`${err.response.data.error}`, {
+                        position: toast.POSITION.TOP_RIGHT,
+                        containerId: "RegisterAccountToast",
+                        autoClose: 3000,
+                        hideProgressBar: true,
+                        closeButton: false,
+                        theme: 'colored',
+                    });
+                }
+            }
+        }
+    }
+
+    const getVerificationCode = async () => {
+        try {
+            const response = await axios.get("http://localhost:8080/skynews/api/v1/auth/generate-verification-code", {
+                params: { email: registerInfo.email }
+            });
+            setVerificationCode(response.data.code);
+        } catch (err) {
+            console.log(err);
+        }
     }
     
-    const handleGetVerificationCode = () => {
+    const handleGetVerificationCode = async () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (registerInfo.email.trim() === '' || !emailRegex.test(registerInfo.email)) {
             setError((prev) => ({...prev, errorVerificationCode: 'Vui lòng nhập email hợp lệ để lấy mã'}));
+            return;
         } else {
             setError((prev) => ({...prev, errorVerificationCode: ''}));
+            getVerificationCode();
             toast.success('Mã xác thực đã được gửi tới email của bạn. Vui lòng kiểm tra hòm thư để lấy mã xác thực!', {
                 position: toast.POSITION.TOP_RIGHT,
-                containerId: 'sendVerifyCodeToast',
+                containerId: 'RegisterAccountToast',
                 autoClose: 3000,
                 hideProgressBar: true,
                 closeButton: false,
-                style: {
-                    color: 'white',
-                    fontSize: '17px',
-                    backgroundColor: 'green',
-                },
+                theme: 'colored',
             });
             setIsGettingCode(true);
             setTimeout(() => {
@@ -120,7 +200,7 @@ const RegisterForm = ({ isModalOpen, setIsModalOpen, openLoginForm }) => {
 
     return (
         <>
-        <ToastContainer containerId="sendVerifyCodeToast" limit={1}/>
+        <ToastContainer containerId="RegisterAccountToast" limit={1}/>
         <Modal
             className='register-form'
             isOpen={isModalOpen}

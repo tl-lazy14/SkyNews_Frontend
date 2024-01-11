@@ -37,7 +37,8 @@ const LoginFormAdmin = () => {
         let countError = 0;
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const specialCharRegex = /[`~' ()":{}|[\]]/;
+        // eslint-disable-next-line no-useless-escape
+        const specialCharRegex = /[`\~!@#\$%\^&\*\+\-',.<>\?\/;():"{}\|\\[\]\s]/;
 
         if (loginInfo.email.trim() === '') {
             countError++;
@@ -59,7 +60,7 @@ const LoginFormAdmin = () => {
         }
         else if (specialCharRegex.test(loginInfo.password)) {
             countError++;
-            setError((prev) => ({...prev, errorPassword: 'Mật khẩu không được chứa dấu tiếng Việt hoặc dấu cách'}));
+            setError((prev) => ({...prev, errorPassword: 'Mật khẩu chỉ được chứa ký tự chữ và số'}));
         }
         else setError((prev) => ({...prev, errorPassword: ''}));
 
@@ -77,7 +78,8 @@ const LoginFormAdmin = () => {
                 localStorage.setItem('hasJustLoggedIn', 'true');
                 login(user);
                 if (user.role === 'ROLE_SENIOR_ADMIN') navigate('/admin/senior/account-management');
-                // else navigate('/operator/usage-request');
+                else if (user.role === 'ROLE_JOURNALIST') navigate('/admin/journalist/my-articles');
+                else if (user.role === 'ROLE_EDITOR') navigate('/admin/editor/pending-articles');
             } catch (err) {
                 toast.error('Tài khoản hoặc mật khẩu không đúng. Vui lòng nhập lại', {
                     position: toast.POSITION.TOP_RIGHT,
@@ -119,7 +121,7 @@ const LoginFormAdmin = () => {
                             value={loginInfo.password}
                             onChange={handleInputChange}  
                         />
-                        <FontAwesomeIcon className='icon' onClick={() => setShowPassword(!showPassword)} icon={showPassword ? faEyeSlash : faEye} />
+                        <FontAwesomeIcon className='icon' onClick={() => setShowPassword(!showPassword)} icon={showPassword ? faEye : faEyeSlash} />
                         <div className='error'>{error.errorPassword}</div>
                     </div>
                     <div className='select-role-field'>

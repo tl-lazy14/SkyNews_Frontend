@@ -56,6 +56,8 @@
 .create-article-page .quill .ql-editor p {
     line-height: 1.2;
     margin-bottom: 15px;
+    background-color: white;
+    color: black;
 }
 .create-article-page .quill .ql-editor img {
     width: 500px;

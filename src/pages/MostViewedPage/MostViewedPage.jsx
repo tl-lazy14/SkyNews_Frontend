@@ -1,13 +1,28 @@
 import CategoryNav from '../../components/CategoryNav/CategoryNav';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
-import News10 from '../../assets/news10.jpg';
 import './MostViewdPage.css';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { getFirstParagraph } from '../../utils/formatContentArticle';
 
 const MostViewedPage = () => {
 
+    const [listArticle, setListArticle] = useState([]);
+    const navigate = useNavigate();
+
+    const getArticlesMostView = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/skynews/api/v1/article/articles-most-view');
+            setListArticle(response.data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
     useEffect(() => {
+        getArticlesMostView();
         window.scrollTo(0, 0);
     }, []);
 
@@ -19,246 +34,16 @@ const MostViewedPage = () => {
             <div className='content'>
                 <div className='title-page'>Xem nhiều</div>
                 <div className='news-container'>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
+                    {listArticle.length > 0 && listArticle.map((article, index) => (
+                    <div key={index} className='news-item'>
+                        <div><img className='thumb-art' onClick={() => navigate(`/news/${article.id}`)} src={article.mainImage} alt='news' /></div>
                         <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
+                            <div onClick={() => navigate(`/news/${article.id}`)} className='title-news'>{article.title}</div>
+                            <div onClick={() => navigate(`/news/${article.id}`)} dangerouslySetInnerHTML={{ __html: getFirstParagraph(article.content) }} className='description'></div>
+                            <div onClick={() => navigate(`/category/${article.category.name}`)} className='category'>{article.category.name}</div>
                         </div>
                     </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
-                    <div className='news-item'>
-                        <div><img className='thumb-art' src={News10} alt='news' /></div>
-                        <div className='title-description-category'>
-                            <div className='title-news'>Mất sạch tiền trong tài khoản ngân hàng vì cài ứng dụng lạ</div>
-                            <div className='description'>Nhiều người sau khi cài ứng dụng theo hướng dẫn của người xưng là cán bộ phường, công an, đã mất sạch tiền trong tài khoản ngân hàng chỉ sau vài phút.</div>
-                            <div className='category'>Kinh doanh</div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
             <Footer />

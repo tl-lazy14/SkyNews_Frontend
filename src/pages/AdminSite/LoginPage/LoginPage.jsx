@@ -17,6 +17,8 @@ const LoginPage = () => {
     useEffect(() => {
         if (user && accessToken) {
             if (user.role === 'ROLE_SENIOR_ADMIN') navigate('/admin/senior/account-management');
+            else if (user.role === 'ROLE_JOURNALIST') navigate('/admin/journalist/my-articles');
+            else if (user.role === 'ROLE_EDITOR') navigate('/admin/editor/pending-articles');
         } 
     }, [accessToken, navigate, user]);
 

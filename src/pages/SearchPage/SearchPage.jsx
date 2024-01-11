@@ -6,9 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import News2 from '../../assets/news2.png';
-import News1 from '../../assets/news1.jpg';
 import PaginationURLHasParameter from '../../components/Pagination/PaginationURLHasParameter';
+import axios from 'axios';
+import { getFirstParagraph } from '../../utils/formatContentArticle';
 
 const SearchPage = () => {
 
@@ -20,10 +20,12 @@ const SearchPage = () => {
     const paramPage = searchParams.get('page');
     const defaultPageValue = 1;
     const currentPage = paramPage ? parseInt(paramPage, 10) : defaultPageValue;
-    const numPages = 2;
 
     const [searchKeyword, setSearchKeyword] = useState(paramQ);
     const [selectCategory, setSelectCategory] = useState('');
+    const [listArticle, setListArticle] = useState([]);
+    const [listCategory, setListCategory] = useState([]);
+    const [totalPages, setTotalPages] = useState(1);
 
     const handleSearchInputChange = (event) => {
         const value = event.target.value;
@@ -36,15 +38,49 @@ const SearchPage = () => {
         navigate(`/search?q=${searchKeyword}`);
     }
 
+    const getListCategory = async () => {
+        try {
+            const response = await axios.get("http://localhost:8080/skynews/api/v1/category-topic/get-list-category");
+            setListCategory(response.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const getArticlesBySearch = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/skynews/api/v1/article/articles-search-page', {
+                params: {
+                    category: selectCategory, 
+                    keyword: searchKeyword,
+                    page: currentPage,
+                    pageSize: 20,
+                },
+            });
+            setListArticle(response.data.listArticle);
+            setTotalPages(Math.floor(response.data.numArticle / 20) + 1)
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         if (searchKeyword.trim() === '') return;
-        else if (searchKeyword !== paramQ) navigate(`/search?q=${searchKeyword}`);
+        else if (searchKeyword !== paramQ) {
+            navigate(`/search?q=${searchKeyword}`);
+            setSelectCategory('');
+        }
         else return; 
     }
 
     useEffect(() => {
+        getListCategory();
+    }, []);
+
+    useEffect(() => {
         setSearchKeyword(paramQ);
+        getArticlesBySearch();
         window.scrollTo(0, 0);
     }, [paramQ, currentPage, selectCategory]);
 
@@ -74,168 +110,25 @@ const SearchPage = () => {
                         <div className='select-field'>
                             <select value={selectCategory} onChange={handleSelectCategoryChange}>
                                 <option value="">Tất cả</option>
-                                <option value="Thời sự">Thời sự</option>
-                                <option value="Thế giới">Thế giới</option>
-                                <option value="Kinh doanh">Kinh doanh</option>
-                                <option value="Bất động sản">Bất động sản</option>
-                                <option value="Khoa học">Khoa học</option>
-                                <option value="Giải trí">Giải trí</option>
-                                <option value="Thể thao">Thể thao</option>
-                                <option value="Pháp luật">Pháp luật</option>
-                                <option value="Giáo dục">Giáo dục</option>
-                                <option value="Sức khỏe">Sức khỏe</option>
-                                <option value="Đời sống">Đời sống</option>
-                                <option value="Du lịch">Du lịch</option>
-                                <option value="Số hóa">Số hóa</option>
-                                <option value="Xe">Xe</option>
-                                <option value="Thư giãn">Thư giãn</option>
+                                {listCategory.length > 0 && listCategory.map((category, index) => (
+                                <option key={index} value={category.name}>{category.name}</option>
+                                ))}
                             </select>
                         </div>
                     </div>
                 </div>
                 <div className='news-container'>
-                    <div className='news-item'>
+                    {listArticle.length > 0 && listArticle.map((article, index) => (
+                    <div key={index} className='news-item'>
                         <div className='title-description'>
-                            <div className='title-news'>Lâm Đồng cân nhắc xây công trình lớn khu vực Dinh tỉnh trưởng ở Đà Lạt</div>
-                            <div className='description'>Chính quyền Lâm Đồng cân nhắc đề xuất dự án quy mô lớn ở khu vực Dinh tỉnh trưởng 113 năm tuổi, thay vào đó nên xen công trình vừa phải khi lập quy hoạch.</div>
+                            <div onClick={() => navigate(`/news/${article.id}`)} className='title-news'>{article.title}</div>
+                            <div onClick={() => navigate(`/news/${article.id}`)} dangerouslySetInnerHTML={{ __html: getFirstParagraph(article.content) }} className='description'></div>
                         </div>
-                        <div><img className='thumb-art' src={News1} alt='news' /></div>
+                        <div><img className='thumb-art' onClick={() => navigate(`/news/${article.id}`)} src={article.mainImage} alt='news' /></div>
                     </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
-                    <div className='news-item'>
-                        <div className='title-description'>
-                            <div className='title-news'>Nguồn cơn khiến OpenAI phế truất CEO</div>
-                            <div className='description'>Sam Altman được cho là bị sa thải đột ngột sau những bất hòa nội bộ với Ilya Sutskever, nhà khoa học trưởng của OpenAI.</div>
-                        </div>
-                        <div><img className='thumb-art' src={News2} alt='news' /></div>
-                    </div>
+                    ))}
                 </div>
-                <PaginationURLHasParameter numPages={numPages} currentPage={currentPage} />
+                <PaginationURLHasParameter numPages={totalPages} currentPage={currentPage} />
             </div>
             <Footer />
         </div>

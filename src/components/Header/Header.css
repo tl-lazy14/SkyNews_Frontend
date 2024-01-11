@@ -183,15 +183,19 @@ header .dropdown-notification .item {
     flex-direction: column;
     padding: 15px;
     cursor: pointer;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: black;
 }
 header .dropdown-notification .item:hover {
-    background-color: rgb(239, 237, 237);
+    background-color: rgb(240, 239, 239);
 }
 header .dropdown-notification .timestamp {
     margin-top: 5px;
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #7b7979;
 }
 header .dropdown-notification .new-notification {
-    color: rgb(70, 70, 243) !important;
-    background-color: rgb(239, 237, 237) !important;
+    color:#1b7755 !important;
+    background-color: rgb(244, 245, 166) !important;
 }

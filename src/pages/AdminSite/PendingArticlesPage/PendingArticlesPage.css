@@ -1,9 +1,18 @@
 .pending-articles-page {
     background-color: #e2eaf8;
     margin-left: 300px;
-    min-height: 713px;
     padding: 10px 30px 30px;
     box-sizing: border-box;
+}
+@media only screen and (min-height: 713px) {
+    .pending-articles-page {
+      min-height: 713px;
+    }
+}
+@media only screen and (min-height: 763px) {
+    .pending-articles-page {
+      min-height: 763px;
+    }
 }
 .pending-articles-page .name-page {
     font-size: 30px;

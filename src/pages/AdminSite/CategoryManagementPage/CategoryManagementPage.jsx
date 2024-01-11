@@ -1,29 +1,108 @@
 import { faPenToSquare, faPlus, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './CategoryManagementPage.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import AddCategoryTopicModal from '../../../components/AdminComponents/Modal/AddCategoryTopicModal';
 import RenameCategoryTopicModal from '../../../components/AdminComponents/Modal/RenameCategoryTopicModal';
+import { UserContext } from '../../../components/userContext';
+import api from '../../../components/axiosInterceptor';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 const CategoryManagementPage = () => {
+
+    const { user } = useContext(UserContext);
+    const accessToken = localStorage.getItem('accessToken');
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
     
+    const [listCategoryTopic, setListCategoryTopic] = useState([]);
+    const [numCategory, setNumCategory] = useState(0);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
     const [thingAdd, setThingAdd] = useState('');
     const [thingRename, setThingRename] = useState('');
+    const [category, setCategory] = useState();
+    const [topic, setTopic] = useState();
+
+    const getListCategoryTopic = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/skynews/api/v1/category-topic');
+            setListCategoryTopic(response.data.listCategory);
+            setNumCategory(response.data.numCategory);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const handleDeleteCategory = async (id) => {
+        try {
+            await api.delete(`/category-topic/delete-category/${id}`, {
+                headers: { token: `Bearer ${accessToken}` }
+            });
+            toast.success('Xóa danh mục thành công!', {
+                position: toast.POSITION.TOP_CENTER,
+                containerId: "deleteCategoryTopicToast",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeButton: false,
+                theme: 'colored',
+            });
+            getListCategoryTopic();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    const handleDeleteTopic = async (id) => {
+        try {
+            await api.delete(`/category-topic/delete-topic/${id}`, {
+                headers: { token: `Bearer ${accessToken}` }
+            });
+            toast.success('Xóa chủ đề thành công!', {
+                position: toast.POSITION.TOP_CENTER,
+                containerId: "deleteCategoryTopicToast",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeButton: false,
+                theme: 'colored',
+            });
+            getListCategoryTopic();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    useEffect(() => {
+        getListCategoryTopic();
+    }, []);
 
     return (
         <>
-        <AddCategoryTopicModal isModalOpen={isAddModalOpen} setIsModalOpen={setIsAddModalOpen} type={thingAdd} />
-        <RenameCategoryTopicModal isModalOpen={isRenameModalOpen} setIsModalOpen={setIsRenameModalOpen} type={thingRename} />
+        <ToastContainer containerId="deleteCategoryTopicToast" limit={1}/>
+        <AddCategoryTopicModal 
+            isModalOpen={isAddModalOpen} 
+            setIsModalOpen={setIsAddModalOpen} 
+            type={thingAdd} 
+            category={category} 
+            updateList={getListCategoryTopic}
+        />
+        <RenameCategoryTopicModal 
+            isModalOpen={isRenameModalOpen} 
+            setIsModalOpen={setIsRenameModalOpen} 
+            type={thingRename} 
+            category={category}
+            topic={topic}
+            updateList={getListCategoryTopic}
+        />
+        { user.role === 'ROLE_SENIOR_ADMIN' && (
         <div className='category-management-page'>
             <h2 className="name-page">Quản lý danh mục</h2>
             <div className='action-container'>
-                <div className="num-categories">15 danh mục</div>
+                <div className="num-categories">{numCategory} danh mục</div>
                 <div 
                     className="add-category-button" 
                     onClick={() => {
@@ -36,14 +115,16 @@ const CategoryManagementPage = () => {
                 </div>
             </div>
             <div className='list-category-container'>
-                <div className='category-item'>
+                { listCategoryTopic.length > 0 && listCategoryTopic.map((category, index) => (
+                <div key={index} className='category-item'>
                     <div className='category-container'>
-                        <div className='category-name'>Thời sự</div>
+                        <div className='category-name'>{category.name}</div>
                         <div 
                             title='Thêm chủ đề vào danh mục' 
                             className='action-btn add-btn'
                             onClick={() => {
                                 setThingAdd('topic');
+                                setCategory(category);
                                 setIsAddModalOpen(true);
                             }}
                         >
@@ -54,237 +135,51 @@ const CategoryManagementPage = () => {
                             className='action-btn rename-btn'
                             onClick={() => {
                                 setThingRename('category');
+                                setCategory(category);
                                 setIsRenameModalOpen(true);
                             }}
                         >
                             <FontAwesomeIcon icon={faPenToSquare} />
                         </div>
-                        <div title='Xóa danh mục' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
+                        <div 
+                            title='Xóa danh mục - Việc này bao gồm xóa toàn bộ các bài báo thuộc danh mục và các chủ đề trong danh mục' 
+                            className='action-btn delete-btn'
+                            onClick={() => handleDeleteCategory(category.id)}
+                        >
+                                <FontAwesomeIcon icon={faTrashCan} />
+                        </div>
                     </div>
                     <div className='topic-container'>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Chính trị</div>
+                        { category.listTopic.length > 0 && category.listTopic.map((topic, index) => (
+                        <div key={index} className='topic-item'>
+                            <div className='topic-name'>{topic.name}</div>
                             <div 
                                 title='Đổi tên chủ đề' 
                                 className='action-btn rename-btn'
                                 onClick={() => {
                                     setThingRename('topic');
+                                    setCategory(category);
+                                    setTopic(topic);
                                     setIsRenameModalOpen(true);
                                 }}
                             >
                                 <FontAwesomeIcon icon={faPenToSquare} />
                             </div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
+                            <div 
+                                title='Xóa chủ đề - Việc này bao gồm xóa toàn bộ các bài báo thuộc chủ đề này' 
+                                className='action-btn delete-btn'
+                                onClick={() => handleDeleteTopic(topic.id)}
+                            >
+                                <FontAwesomeIcon icon={faTrashCan} />
+                            </div>
                         </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Dân sinh</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Lao động - Việc làm</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Giao thông</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
+                        ))}
                     </div>
                 </div>
-                <div className='category-item'>
-                    <div className='category-container'>
-                        <div className='category-name'>Thế giới</div>
-                        <div title='Thêm chủ đề vào danh mục' className='action-btn add-btn'><FontAwesomeIcon icon={faPlus} /></div>
-                        <div title='Đổi tên danh mục' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                        <div title='Xóa danh mục' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                    </div>
-                    <div className='topic-container'>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Tư liệu</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Phân tích</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Người Việt 5 châu</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Cuộc sống đó đây</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Quân sự</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                    </div>
-                </div>
-                <div className='category-item'>
-                    <div className='category-container'>
-                        <div className='category-name'>Kinh doanh</div>
-                        <div title='Thêm chủ đề vào danh mục' className='action-btn add-btn'><FontAwesomeIcon icon={faPlus} /></div>
-                        <div title='Đổi tên danh mục' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                        <div title='Xóa danh mục' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                    </div>
-                    <div className='topic-container'>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Quốc tế</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Doanh nghiệp</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Chứng khoán</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Ebank</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Vĩ mô</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Hàng hóa</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Bảo hiểm</div>
-                            <div title='Đổi tên chủ đề' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                    </div>
-                </div>
-                <div className='category-item'>
-                    <div className='category-container'>
-                        <div className='category-name'>Bất động sản</div>
-                        <div title='Thêm chủ đề vào danh mục' className='action-btn add-btn'><FontAwesomeIcon icon={faPlus} /></div>
-                        <div title='Đổi tên danh mục' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                        <div title='Xóa danh mục' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                    </div>
-                    <div className='topic-container'>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Chính sách</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Thị trường</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Không gian sống</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                    </div>
-                </div>
-                <div className='category-item'>
-                    <div className='category-container'>
-                        <div className='category-name'>Khoa học</div>
-                        <div title='Thêm chủ đề vào danh mục' className='action-btn add-btn'><FontAwesomeIcon icon={faPlus} /></div>
-                        <div title='Đổi tên danh mục' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                        <div title='Xóa danh mục' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                    </div>
-                    <div className='topic-container'>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Khoa học trong nước</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Tin tức</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Phát minh</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Ứng dụng</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Thế giới tự nhiên</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Thường thức</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                    </div>
-                </div>
-                <div className='category-item'>
-                    <div className='category-container'>
-                        <div className='category-name'>Giải trí</div>
-                        <div title='Thêm chủ đề vào danh mục' className='action-btn add-btn'><FontAwesomeIcon icon={faPlus} /></div>
-                        <div title='Đổi tên danh mục' className='action-btn rename-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                        <div title='Xóa danh mục' className='action-btn delete-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                    </div>
-                    <div className='topic-container'>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Showbiz</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Sách</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Phim</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Nhạc</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Thời trang</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Làm đẹp</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                        <div className='topic-item'>
-                            <div className='topic-name'>Sân khấu - Mỹ thuật</div>
-                            <div title='Đổi tên chủ đề' className='action-btn'><FontAwesomeIcon icon={faPenToSquare} /></div>
-                            <div title='Xóa chủ đề' className='action-btn'><FontAwesomeIcon icon={faTrashCan} /></div>
-                        </div>
-                    </div>
-                </div>
+                ))}
             </div>
         </div>
+        )}
         </>
     );
 };

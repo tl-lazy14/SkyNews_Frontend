@@ -2,11 +2,11 @@ import { Outlet } from "react-router-dom";
 import NavbarEditor from "../../../components/AdminComponents/Navbar/NavbarEditor";
 import './Site.css';
 
-const EditorSite = () => {
+const EditorSite = ({ onLogout }) => {
     return (
         <>
             <div className="site">
-                <NavbarEditor />
+                <NavbarEditor onLogout={onLogout} />
                 <Outlet />
             </div>
         </>

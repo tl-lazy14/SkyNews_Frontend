@@ -3,9 +3,12 @@ import WebLogo from '../../../assets/Sky-News-Logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import { faKey, faNewspaper, faPlus, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { useContext } from 'react';
+import { UserContext } from '../../userContext';
 
-const NavbarJournalist = () => {
+const NavbarJournalist = ({onLogout}) => {
 
+    const { user } = useContext(UserContext);
     const path = window.location.pathname;
     const navigate = useNavigate();
 
@@ -42,11 +45,11 @@ const NavbarJournalist = () => {
             </nav>
             <div className="user-info">
                 <div className="user-info-container">
-                    <p style={{ color: 'black', fontWeight: '600' }} className='user-name'>Tùng Lâm</p>
+                    <p style={{ color: 'black', fontWeight: '600' }} className='user-name'>{user.username}</p>
                     <p style={{opacity: 0.8, fontSize: '14px'}} className='user-role'>Người viết báo</p>
                 </div>
                 <div className="log-out">
-                    <FontAwesomeIcon className="icon" icon={faRightFromBracket} />
+                    <FontAwesomeIcon onClick={() => onLogout()} className="icon" icon={faRightFromBracket} />
                 </div>
             </div>
         </div>

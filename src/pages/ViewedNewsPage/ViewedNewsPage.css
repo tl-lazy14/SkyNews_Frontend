@@ -1,5 +1,6 @@
 .viewed-news-page .content {
     padding: 20px 350px;
+    min-height: 513px;
 }
 .viewed-news-page .title-page {
     color: black;

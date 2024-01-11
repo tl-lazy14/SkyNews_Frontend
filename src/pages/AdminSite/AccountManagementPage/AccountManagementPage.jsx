@@ -3,13 +3,20 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faPlus, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import CreateUserModal from '../../../components/AdminComponents/Modal/CreateUserModal';
+import api from '../../../components/axiosInterceptor';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AccountManagementPage = () => {
 
-    const [role, setRole] = useState("journalist");
+    const accessToken = localStorage.getItem("accessToken");
+
+    const [role, setRole] = useState("ROLE_JOURNALIST");
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(2);
+    const [totalPages, setTotalPages] = useState(1);
+    const [listUser, setListUser] = useState([]);
+    const [numUser, setNumUser] = useState(0);
 
     const [isCreateUserModalOpen, setIsCreateUserModalOpen] = useState(false);
 
@@ -30,20 +37,65 @@ const AccountManagementPage = () => {
         else setCurrentPage(page);
     };
 
+    const getListUsers = async () => {
+        try {
+            const response = await api.get('/user/admin/get-list-user', {
+                params: { 
+                    role: role,
+                    searchQuery: searchQuery,
+                    page: currentPage,
+                    pageSize: 10,
+                },
+                headers: { token: `Bearer ${accessToken}` }
+            });
+            setListUser(response.data.listUser);
+            setNumUser(response.data.numUser);
+            setTotalPages(Math.floor(response.data.numUser / 10) + 1);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     useEffect(() => {
+        getListUsers();
         window.scrollTo(0, 0);
     }, [currentPage, role, searchQuery]);
 
+    const handleDeleteUser = async (id) => {
+        try {
+            await api.delete(`/user/admin/delete/${id}`, {
+                headers: { token: `Bearer ${accessToken}` }
+            });
+            toast.success('Xóa tài khoản người dùng thành công!', {
+                position: toast.POSITION.TOP_CENTER,
+                containerId: "deleteUserAdminToast",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeButton: false,
+                theme: 'colored',
+            });
+            getListUsers();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     return (
         <>
-        <CreateUserModal isModalOpen={isCreateUserModalOpen} setIsModalOpen={setIsCreateUserModalOpen} />
+        <ToastContainer containerId="deleteUserAdminToast" limit={1}/>
+        <CreateUserModal 
+            isModalOpen={isCreateUserModalOpen} 
+            setIsModalOpen={setIsCreateUserModalOpen} 
+            setRole={setRole} 
+            updateList={getListUsers}
+        />
         <div className='account-management-page'>
             <div className='top-container'>
-                <div><h2 className="name-page">Danh sách tài khoản {role === 'journalist' ? 'nhà báo' : 'biên tập viên'}</h2></div>
+                <div><h2 className="name-page">Danh sách tài khoản {role === 'ROLE_JOURNALIST' ? 'nhà báo' : 'biên tập viên'}</h2></div>
                 <div className='role-picker'>
                     <select value={role} onChange={handleSelectRoleChange}>
-                        <option value="journalist">Nhà báo</option>
-                        <option value="editor">Biên tập viên</option>
+                        <option value="ROLE_JOURNALIST">Nhà báo</option>
+                        <option value="ROLE_EDITOR">Biên tập viên</option>
                     </select>
                 </div>
             </div>
@@ -55,7 +107,7 @@ const AccountManagementPage = () => {
                     </div>
                 </div>
                 <div className='right-action-container'>
-                    <div className="num-articles">15 tài khoản</div>
+                    <div className="num-articles">{numUser} tài khoản</div>
                     <div className="search-box">
                         <input
                             type="text"
@@ -77,156 +129,23 @@ const AccountManagementPage = () => {
                                 <th>Vai trò</th>
                                 <th></th>
                             </tr>
-                            <tr className="record"> 
-                                <td>1</td>
-                                <td>Tùng Lâm</td>
-                                <td>lam2002ttb@gmail.com</td>
+                            { listUser.length > 0 && listUser.map((user, index) => (
+                            <tr key={index} className="record"> 
+                                <td>{10 * (currentPage - 1) + index + 1}</td>
+                                <td>{user.name}</td>
+                                <td>{user.email}</td>
                                 <td>
-                                    {role === 'journalist' ? 'Nhà báo' : 'Biên tập viên - '}
-                                    {role === 'editor' && <span className='category'>Thời sự</span>}
+                                    {role === 'ROLE_JOURNALIST' ? 'Nhà báo' : 'Biên tập viên - '}
+                                    {role === 'ROLE_EDITOR' && <span className='category'>{user.editorCategory}</span>}
                                 </td>
                                 <td>
-                                    <div className='btn-delete'>
+                                    <div onClick={() => handleDeleteUser(user.id)} className='btn-delete'>
                                         <div>Xóa</div>
                                         <div><FontAwesomeIcon style={{fontSize: '20px'}} icon={faTrashCan} /></div>
                                     </div>
                                 </td>
                             </tr>
-                            <tr className="record"> 
-                                <td>1</td>
-                                <td>Tùng Lâm</td>
-                                <td>lam2002ttb@gmail.com</td>
-                                <td>
-                                    {role === 'journalist' ? 'Nhà báo' : 'Biên tập viên - '}
-                                    {role === 'editor' && <span className='category'>Thời sự</span>}
-                                </td>
-                                <td>
-                                    <div className='btn-delete'>
-                                        <div>Xóa</div>
-                                        <div><FontAwesomeIcon style={{fontSize: '20px'}} icon={faTrashCan} /></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="record"> 
-                                <td>1</td>
-                                <td>Tùng Lâm</td>
-                                <td>lam2002ttb@gmail.com</td>
-                                <td>
-                                    {role === 'journalist' ? 'Nhà báo' : 'Biên tập viên - '}
-                                    {role === 'editor' && <span className='category'>Thời sự</span>}
-                                </td>
-                                <td>
-                                    <div className='btn-delete'>
-                                        <div>Xóa</div>
-                                        <div><FontAwesomeIcon style={{fontSize: '20px'}} icon={faTrashCan} /></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="record"> 
-                                <td>1</td>
-                                <td>Tùng Lâm</td>
-                                <td>lam2002ttb@gmail.com</td>
-                                <td>
-                                    {role === 'journalist' ? 'Nhà báo' : 'Biên tập viên - '}
-                                    {role === 'editor' && <span className='category'>Thời sự</span>}
-                                </td>
-                                <td>
-                                    <div className='btn-delete'>
-                                        <div>Xóa</div>
-                                        <div><FontAwesomeIcon style={{fontSize: '20px'}} icon={faTrashCan} /></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="record"> 
-                                <td>1</td>
-                                <td>Tùng Lâm</td>
-                                <td>lam2002ttb@gmail.com</td>
-                                <td>
-                                    {role === 'journalist' ? 'Nhà báo' : 'Biên tập viên - '}
-                                    {role === 'editor' && <span className='category'>Thời sự</span>}
-                                </td>
-                                <td>
-                                    <div className='btn-delete'>
-                                        <div>Xóa</div>
-                                        <div><FontAwesomeIcon style={{fontSize: '20px'}} icon={faTrashCan} /></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="record"> 
-                                <td>1</td>
-                                <td>Tùng Lâm</td>
-                                <td>lam2002ttb@gmail.com</td>
-                                <td>
-                                    {role === 'journalist' ? 'Nhà báo' : 'Biên tập viên - '}
-                                    {role === 'editor' && <span className='category'>Thời sự</span>}
-                                </td>
-                                <td>
-                                    <div className='btn-delete'>
-                                        <div>Xóa</div>
-                                        <div><FontAwesomeIcon style={{fontSize: '20px'}} icon={faTrashCan} /></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="record"> 
-                                <td>1</td>
-                                <td>Tùng Lâm</td>
-                                <td>lam2002ttb@gmail.com</td>
-                                <td>
-                                    {role === 'journalist' ? 'Nhà báo' : 'Biên tập viên - '}
-                                    {role === 'editor' && <span className='category'>Thời sự</span>}
-                                </td>
-                                <td>
-                                    <div className='btn-delete'>
-                                        <div>Xóa</div>
-                                        <div><FontAwesomeIcon style={{fontSize: '20px'}} icon={faTrashCan} /></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="record"> 
-                                <td>1</td>
-                                <td>Tùng Lâm</td>
-                                <td>lam2002ttb@gmail.com</td>
-                                <td>
-                                    {role === 'journalist' ? 'Nhà báo' : 'Biên tập viên - '}
-                                    {role === 'editor' && <span className='category'>Thời sự</span>}
-                                </td>
-                                <td>
-                                    <div className='btn-delete'>
-                                        <div>Xóa</div>
-                                        <div><FontAwesomeIcon style={{fontSize: '20px'}} icon={faTrashCan} /></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="record"> 
-                                <td>1</td>
-                                <td>Tùng Lâm</td>
-                                <td>lam2002ttb@gmail.com</td>
-                                <td>
-                                    {role === 'journalist' ? 'Nhà báo' : 'Biên tập viên - '}
-                                    {role === 'editor' && <span className='category'>Thời sự</span>}
-                                </td>
-                                <td>
-                                    <div className='btn-delete'>
-                                        <div>Xóa</div>
-                                        <div><FontAwesomeIcon style={{fontSize: '20px'}} icon={faTrashCan} /></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="record"> 
-                                <td>1</td>
-                                <td>Tùng Lâm</td>
-                                <td>lam2002ttb@gmail.com</td>
-                                <td>
-                                    {role === 'journalist' ? 'Nhà báo' : 'Biên tập viên - '}
-                                    {role === 'editor' && <span className='category'>Thời sự</span>}
-                                </td>
-                                <td>
-                                    <div className='btn-delete'>
-                                        <div>Xóa</div>
-                                        <div><FontAwesomeIcon style={{fontSize: '20px'}} icon={faTrashCan} /></div>
-                                    </div>
-                                </td>
-                            </tr>
+                            ))}
                     </tbody>
                 </table>
             </div>
