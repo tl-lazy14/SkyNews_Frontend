@@ -6,16 +6,20 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { getFirstParagraph } from '../../utils/formatContentArticle';
+import { LoaderComponent } from '../../utils/loading';
 
 const MostViewedPage = () => {
 
     const [listArticle, setListArticle] = useState([]);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const getArticlesMostView = async () => {
         try {
+            setLoading(true);
             const response = await axios.get('http://localhost:8080/skynews/api/v1/article/articles-most-view');
             setListArticle(response.data);
+            setLoading(false);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -33,6 +37,7 @@ const MostViewedPage = () => {
             <CategoryNav />
             <div className='content'>
                 <div className='title-page'>Xem nhiều</div>
+                { !loading && (
                 <div className='news-container'>
                     {listArticle.length > 0 && listArticle.map((article, index) => (
                     <div key={index} className='news-item'>
@@ -45,6 +50,12 @@ const MostViewedPage = () => {
                     </div>
                     ))}
                 </div>
+                )}
+                { loading && (
+                    <div className='content'>
+                        <LoaderComponent />
+                    </div>
+                )}
             </div>
             <Footer />
         </div>

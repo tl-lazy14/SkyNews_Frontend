@@ -1,6 +1,15 @@
 .search-page .content {
     padding: 20px 350px;
-    min-height: 513px;
+}
+@media only screen and (min-height: 713px) {
+    .search-page .content {
+      min-height: 513px;
+    }
+}
+@media only screen and (min-height: 763px) {
+    .search-page .content {
+      min-height: 563px;
+    }
 }
 .search-page .content .search-container {
     box-sizing: border-box;

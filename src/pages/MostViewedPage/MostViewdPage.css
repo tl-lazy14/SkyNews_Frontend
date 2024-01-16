@@ -1,6 +1,15 @@
 .most-viewed-page .content {
     padding: 20px 350px;
-    min-height: 513px;
+}
+@media only screen and (min-height: 713px) {
+    .most-viewed-page .content {
+      min-height: 513px;
+    }
+}
+@media only screen and (min-height: 763px) {
+    .most-viewed-page .content {
+      min-height: 563px;
+    }
 }
 .most-viewed-page .title-page {
     color: black;

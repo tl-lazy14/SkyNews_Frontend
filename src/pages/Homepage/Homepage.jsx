@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
 import { getFirstParagraph } from '../../utils/formatContentArticle';
+import { LoaderComponent } from '../../utils/loading';
 
 const Homepage = () => {
 
@@ -29,8 +30,11 @@ const Homepage = () => {
     const [articleTourism, setArticleTourism] = useState([]);
     const [articleCar, setArticleCar] = useState([]);
 
+    const [loading, setLoading] = useState(false);
+
     const getArticlesHomepage = async () => {
         try {
+            setLoading(true);
             const response = await axios.get('http://localhost:8080/skynews/api/v1/article/articles-homepage');
             const data = response.data;
 
@@ -49,6 +53,7 @@ const Homepage = () => {
             setArticleLaw(data.articleLaw);
             setArticleTourism(data.articleTourism);
             setArticleCar(data.articleCar);
+            setLoading(false);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -64,6 +69,7 @@ const Homepage = () => {
         <div className='homepage'>
             <Header />
             <CategoryNav />
+            { !loading && (
             <div className='content'>
                 {listArticleMix.length > 0 && (
                 <div className='first-news-group'>
@@ -479,6 +485,12 @@ const Homepage = () => {
                 </div>
                 )}
             </div>
+            )}
+            { loading && (
+                <div className='content'>
+                    <LoaderComponent />
+                </div>
+            )}
             <Footer />
         </div>
         </>

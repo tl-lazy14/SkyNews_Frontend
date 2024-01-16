@@ -7,6 +7,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import PaginationURLNoParameter from '../../components/Pagination/PaginationURLNoParameter';
 import axios from 'axios';
 import { getFirstParagraph } from '../../utils/formatContentArticle';
+import { LoaderComponent } from '../../utils/loading';
 
 const CategoryPage = () => {
     
@@ -18,6 +19,8 @@ const CategoryPage = () => {
     const [listTopic, setListTopic] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
 
+    const [loading, setLoading] = useState(false);
+
     const searchParams = new URLSearchParams(location.search);
     const paramPage = searchParams.get('page');
     const defaultPageValue = 1;
@@ -26,6 +29,7 @@ const CategoryPage = () => {
 
     const getArticlesCategoryTopic = async () => {
         try {
+            setLoading(true);
             const response = await axios.get('http://localhost:8080/skynews/api/v1/article/articles-category-page', {
                 params: {
                     category: category, 
@@ -35,7 +39,8 @@ const CategoryPage = () => {
                 },
             });
             setListArticle(response.data.listArticle);
-            setTotalPages(Math.floor(response.data.numArticle / 25) + 1)
+            setTotalPages(Math.floor(response.data.numArticle / 25) + 1);
+            setLoading(false);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -64,6 +69,7 @@ const CategoryPage = () => {
         <div className='category-page'>
             <Header />
             <CategoryNav />
+            { !loading && (
             <div className='content'>
                 <div className='nav-topic-container'>
                     <div className='category-name' onClick={() => navigate(`/category/${category}`)}>{category}</div>
@@ -127,6 +133,12 @@ const CategoryPage = () => {
                 </div>
                 <PaginationURLNoParameter numPages={totalPages} currentPage={currentPage} />
             </div>
+            )}
+            { loading && (
+                <div className='content'>
+                    <LoaderComponent />
+                </div>
+            )}
             <Footer />
         </div>
         </>

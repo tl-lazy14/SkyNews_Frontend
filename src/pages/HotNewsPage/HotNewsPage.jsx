@@ -9,6 +9,7 @@ import { formatDateToYYYYMMDD } from '../../utils/formatDateTime';
 import { calculateTimeAgo } from '../../utils/calculateTime';
 import { useNavigate } from 'react-router-dom';
 import { getFirstParagraph } from '../../utils/formatContentArticle';
+import { LoaderComponent } from '../../utils/loading';
 
 const HotNewsPage = () => {
 
@@ -16,14 +17,18 @@ const HotNewsPage = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [listArticle, setListArticle] = useState([]);
 
+    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
 
     const getArticlesHotNews = async () => {
         try {
+            setLoading(true);
             const response = await axios.get('http://localhost:8080/skynews/api/v1/article/articles-hot-news', {
                 params: { date: formatDateToYYYYMMDD(selectedDate) }
             });
             setListArticle(response.data);
+            setLoading(false);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -81,6 +86,7 @@ const HotNewsPage = () => {
                         </div>
                     ))}
                 </div>
+                { !loading && (
                 <div className='news-container'>
                     {listArticle.length > 0 && listArticle.map((article, index) => (
                     <div key={index} className='news-item'>
@@ -96,6 +102,12 @@ const HotNewsPage = () => {
                     </div>
                     ))}
                 </div>
+                )}
+                { loading && (
+                    <div className='content'>
+                        <LoaderComponent />
+                    </div>
+                )}
             </div>
             <Footer />
         </div> 

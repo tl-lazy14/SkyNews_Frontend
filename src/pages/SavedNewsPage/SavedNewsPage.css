@@ -1,6 +1,15 @@
 .saved-news-page .content {
     padding: 20px 350px;
-    min-height: 513px;
+}
+@media only screen and (min-height: 713px) {
+    .saved-news-page .content {
+      min-height: 513px;
+    }
+}
+@media only screen and (min-height: 763px) {
+    .saved-news-page .content {
+      min-height: 563px;
+    }
 }
 .saved-news-page .title-page {
     color: black;

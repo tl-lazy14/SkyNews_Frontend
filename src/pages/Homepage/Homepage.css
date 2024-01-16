@@ -1,6 +1,15 @@
 .homepage .content {
     padding: 20px 200px;
-    min-height: 513px;
+}
+@media only screen and (min-height: 713px) {
+    .homepage .content {
+      min-height: 513px;
+    }
+}
+@media only screen and (min-height: 763px) {
+    .homepage .content {
+      min-height: 563px;
+    }
 }
 .homepage .first-news-group {
     display: grid;

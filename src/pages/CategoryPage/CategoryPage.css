@@ -1,6 +1,15 @@
 .category-page .content {
     padding: 20px 200px;
-    min-height: 513px;
+}
+@media only screen and (min-height: 713px) {
+    .category-page .content {
+      min-height: 513px;
+    }
+}
+@media only screen and (min-height: 763px) {
+    .category-page .content {
+      min-height: 563px;
+    }
 }
 .category-page .nav-topic-container {
     display: flex;

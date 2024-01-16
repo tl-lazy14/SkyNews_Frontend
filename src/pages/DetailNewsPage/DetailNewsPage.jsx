@@ -13,6 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { UserContext } from '../../components/userContext';
 import api from '../../components/axiosInterceptor';
+import { LoaderComponent } from '../../utils/loading';
 
 const DetailNewsPage = () => {
 
@@ -24,6 +25,8 @@ const DetailNewsPage = () => {
     const [listComment, setListComment] = useState([]);
     const [numComment, setNumComment] = useState(0);
 
+    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
     const accessToken = localStorage.getItem("accessToken");
@@ -31,9 +34,11 @@ const DetailNewsPage = () => {
 
     const getArticle = async () => {
         try {
+            setLoading(true);
             const response = await axios.get(`http://localhost:8080/skynews/api/v1/article/detail/${idNews}`);
             setArticle(response.data.article);
             setTags(response.data.tags);
+            setLoading(false);
         } catch (err) {
             console.log(err);
         }
@@ -114,6 +119,7 @@ const DetailNewsPage = () => {
         <div className='detail-news-page'>
             <Header />
             <CategoryNav />
+            { !loading && (
             <div className='content'>
                 <div className='news-content'>
                     <div className='header-content'>
@@ -171,6 +177,12 @@ const DetailNewsPage = () => {
                     </div>
                 </div>  
             </div>
+            )}
+            { loading && (
+                <div className='content'>
+                    <LoaderComponent />
+                </div>
+            )}
             <Footer />
         </div>
         </>

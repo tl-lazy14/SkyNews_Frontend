@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import PaginationURLHasParameter from '../../components/Pagination/PaginationURLHasParameter';
 import axios from 'axios';
 import { getFirstParagraph } from '../../utils/formatContentArticle';
+import { LoaderComponent } from '../../utils/loading';
 
 const SearchPage = () => {
 
@@ -26,6 +27,8 @@ const SearchPage = () => {
     const [listArticle, setListArticle] = useState([]);
     const [listCategory, setListCategory] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
+    
+    const [loading, setLoading] = useState(false);
 
     const handleSearchInputChange = (event) => {
         const value = event.target.value;
@@ -49,6 +52,7 @@ const SearchPage = () => {
 
     const getArticlesBySearch = async () => {
         try {
+            setLoading(true);
             const response = await axios.get('http://localhost:8080/skynews/api/v1/article/articles-search-page', {
                 params: {
                     category: selectCategory, 
@@ -58,7 +62,8 @@ const SearchPage = () => {
                 },
             });
             setListArticle(response.data.listArticle);
-            setTotalPages(Math.floor(response.data.numArticle / 20) + 1)
+            setTotalPages(Math.floor(response.data.numArticle / 20) + 1);
+            setLoading(false);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -117,6 +122,7 @@ const SearchPage = () => {
                         </div>
                     </div>
                 </div>
+                { !loading && (
                 <div className='news-container'>
                     {listArticle.length > 0 && listArticle.map((article, index) => (
                     <div key={index} className='news-item'>
@@ -128,6 +134,12 @@ const SearchPage = () => {
                     </div>
                     ))}
                 </div>
+                )}
+                { loading && (
+                    <div className='content'>
+                        <LoaderComponent />
+                    </div>
+                )}
                 <PaginationURLHasParameter numPages={totalPages} currentPage={currentPage} />
             </div>
             <Footer />

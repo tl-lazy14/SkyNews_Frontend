@@ -8,11 +8,14 @@ import PaginationURLNoParameter from '../../components/Pagination/PaginationURLN
 import axios from 'axios';
 import { calculateTimeAgo } from '../../utils/calculateTime';
 import { getFirstParagraph } from '../../utils/formatContentArticle';
+import { LoaderComponent } from '../../utils/loading';
 
 const NewestPage = () => {
 
     const [listArticle, setListArticle] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
+
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -23,6 +26,7 @@ const NewestPage = () => {
 
     const getNewestArticles = async () => {
         try {
+            setLoading(true);
             const response = await axios.get('http://localhost:8080/skynews/api/v1/article/newest', {
                 params: {
                     page: currentPage,
@@ -32,6 +36,7 @@ const NewestPage = () => {
             setListArticle(response.data.listArticle);
             const numPageTotal = Math.floor(response.data.numArticle / 20) + 1;
             setTotalPages(numPageTotal <= 3 ? numPageTotal : 3);
+            setLoading(false);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -67,6 +72,7 @@ const NewestPage = () => {
             <CategoryNav />
             <div className='content'>
                 <div className='title-page'>Mới nhất</div>
+                { !loading && (
                 <div className='news-container'>
                     {listArticle.length > 0 && listArticle.map((article, index) => (
                     <div key={index} className='news-item'>
@@ -81,6 +87,12 @@ const NewestPage = () => {
                     </div>
                     ))}
                 </div>
+                )}
+                { loading && (
+                    <div className='content'>
+                        <LoaderComponent/>
+                    </div>
+                )}
                 <PaginationURLNoParameter numPages={totalPages} currentPage={currentPage} />
             </div>
             <Footer />

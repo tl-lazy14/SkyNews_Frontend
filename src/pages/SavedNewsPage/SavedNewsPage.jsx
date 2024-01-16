@@ -13,11 +13,14 @@ import { UserContext } from '../../components/userContext';
 import { getFirstParagraph } from '../../utils/formatContentArticle';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { LoaderComponent } from '../../utils/loading';
 
 const SavedNewsPage = () => {
 
     const [listArticle, setListArticle] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
+    
+    const [loading, setLoading] = useState(false);
 
     const { user } = useContext(UserContext);
     const accessToken = localStorage.getItem("accessToken");
@@ -30,6 +33,7 @@ const SavedNewsPage = () => {
 
     const getSavedArticles = async () => {
         try {
+            setLoading(true);
             const response = await api.get(`/article/saved-news/${user.id}`, {
                 params: {
                     page: currentPage,
@@ -39,6 +43,7 @@ const SavedNewsPage = () => {
             });
             setListArticle(response.data.listArticle);
             setTotalPages(Math.floor(response.data.numArticle / 10) + 1);
+            setLoading(false);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -76,6 +81,7 @@ const SavedNewsPage = () => {
             <CategoryNav />
             <div className='content'>
                 <div className='title-page'>Tin đã lưu</div>
+                { !loading && (
                 <div className='news-container'>
                     {listArticle.length > 0 && listArticle.map((article, index) => (
                     <div key={index} className='news-item'>
@@ -91,6 +97,12 @@ const SavedNewsPage = () => {
                     </div>
                     ))}
                 </div>
+                )}
+                { loading && (
+                    <div className='content'>
+                        <LoaderComponent />
+                    </div>
+                )}
                 <PaginationURLNoParameter numPages={totalPages} currentPage={currentPage} />
             </div>
             <Footer />

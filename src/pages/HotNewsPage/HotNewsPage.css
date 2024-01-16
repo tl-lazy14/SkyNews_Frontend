@@ -1,6 +1,15 @@
 .hot-news-page .content {
     padding: 20px 350px;
-    min-height: 513px;
+}
+@media only screen and (min-height: 713px) {
+    .hot-news-page .content {
+      min-height: 513px;
+    }
+}
+@media only screen and (min-height: 763px) {
+    .hot-news-page .content {
+      min-height: 563px;
+    }
 }
 .hot-news-page .title-page {
     color: black;
