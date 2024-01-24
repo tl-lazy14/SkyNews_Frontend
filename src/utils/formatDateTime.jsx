@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const getFormattedDate = () => {
     const currentDateTime = new Date();
     const daysOfWeek = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
@@ -38,47 +40,24 @@ export const getFormattedTimestampComment = (date) => {
 }
 
 export const convertLocaleStringToCustomDateFormat = (inputDate) => {
-    // Tạo một đối tượng Date từ chuỗi đầu vào
-    let dateObject = new Date(inputDate);
-
-    // Lấy thông tin về ngày, tháng, năm
-    let year = dateObject.getFullYear();
-    let day = String(dateObject.getMonth() + 1).padStart(2, '0'); // Thêm '0' trước nếu cần
-    let month = String(dateObject.getDate()).padStart(2, '0');
-
-    // Tạo chuỗi mới theo định dạng 'yyyy-MM-dd'
-    let result = `${year}-${month}-${day}`;
+    const inputDateFormat = moment(inputDate, 'HH:mm:ss DD-MM-YYYY');
+    const result = inputDateFormat.format('YYYY-MM-DD')
 
     return result;
 }
 
 export const formatDateFromResponse = (inputDate) => {
-    let dateObject = new Date(inputDate);
 
-    // Lấy thông tin về ngày, tháng, năm
-    let year = dateObject.getFullYear();
-    let day = String(dateObject.getMonth() + 1);
-    let month = String(dateObject.getDate());
-
-    // Tạo chuỗi mới theo định dạng 'yyyy-MM-dd'
-    let result = `${day}/${month}/${year}`;
+    const inputDateFormat = moment(inputDate, 'HH:mm:ss DD-MM-YYYY');
+    const result = inputDateFormat.format('DD/MM/YYYY')
 
     return result;
 
 }
 
 export const formatDateTimeFromResponse = (inputDate) => {
-    let dateObject = new Date(inputDate);
-
-    // Lấy thông tin về ngày, tháng, năm
-    let year = dateObject.getFullYear();
-    let day = String(dateObject.getMonth() + 1);
-    let month = String(dateObject.getDate());
-    let hour = String(dateObject.getHours()).padStart(2,0);
-    let minute = String(dateObject.getMinutes()).padStart(2,0);
-
-    // Tạo chuỗi mới theo định dạng 'yyyy-MM-dd'
-    let result = `${hour}:${minute} ${day}/${month}/${year}`;
+    const inputDateFormat = moment(inputDate, 'HH:mm:ss DD-MM-YYYY');
+    const result = inputDateFormat.format('HH:mm DD/MM/YYYY')
 
     return result;
 
